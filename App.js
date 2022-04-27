@@ -4,6 +4,9 @@ import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 import Navigator from './routes/homeStack'
 import facade from './MVC/Model/Facade'
+
+//TODO: Replace the start loading of the materials to a better place
+
 //import BranchesPageController from './MVC/Controller/BranchesPageController'
 
 

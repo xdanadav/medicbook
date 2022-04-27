@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         flex: 1,
-        backgroundColor: "#55F"
+        backgroundColor: "#FBDF7B"
     },
     defaultText: {
         fontSize: 50,

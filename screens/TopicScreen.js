@@ -7,6 +7,8 @@ import SectionsScreen from './SectionsScreen';
 import Navigator from '../routes/homeStack';
 import facade from '../MVC/Model/Facade'
 
+import TopicScreenItem from '../components/TopicScreenItem'
+
 
 const model = {
     Materials: 0,
@@ -16,10 +18,13 @@ const model = {
 }
 
 
+
+
 export default function topicScreen({navigation}){
     let allMaterial = getFromFacade()
     let [materials, setMaterials] = useState(allMaterial);
-    console.log("Params", navigation.state.params)
+
+
     const LeftActions = () => {
         return(
             <Navigator/>
@@ -30,10 +35,9 @@ export default function topicScreen({navigation}){
     }
 
     const segueTo = (index) =>{
-
         console.log("index" , index)
         console.log(".key = ", model.Materials)
-        
+        console.log("\n\n\n Navigation State Params:\n\n\n\n", navigation.state.params)
         switch(index){
             case model.Materials:
                 navigation.navigate("MaterialsScreen", navigation.state.params);
@@ -63,11 +67,13 @@ export default function topicScreen({navigation}){
                     {
                         materials.map((item, index)=> {
                         return(
-                                <MapObjectView key = {index} text={item} onPress={() => facade.writeTry()}/>//segueTo(index)}/>       
+                                <TopicScreenItem key = {index} text={item} onPress={() => segueTo(index)}/>       
                         )
                         })
                     }
                     </View>
+                    
+
                 </Swipeable>
             </View>
         </View>
@@ -76,7 +82,7 @@ export default function topicScreen({navigation}){
 }
 
 function getFromFacade(){
-    return ["חומרים", "סרטונים", "מצגות", "טריוויה"]
+    return ["חומרים", "סרטונים"]//, "מצגות", "טריוויה"]
 }
 
 const styles = StyleSheet.create({
@@ -84,6 +90,7 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#FFFFFF', 
       height: '150%',
+      alignItems: "center",
     },
     taskWrapper: {
       paddingTop: 80,

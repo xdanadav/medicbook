@@ -8,12 +8,20 @@ import MaterialsScreen from '../screens/MaterialsScreen';
 import VideosScreen from '../screens/VideosScreen';
 import PresentationsScreen from '../screens/PresentationsScreen';
 import TriviaScreen from '../screens/TriviaScreen';
-
+import SingleMaterialScreen from '../screens/SingleMaterialScreen';
+import PreEnteryLoadingScreen from '../screens/PreEnteryLoadingScreen';
 
 
 const screens = {
+    PreEnteryLoadingScreen : {
+        screen: PreEnteryLoadingScreen
+    },
     SectionsScreen: {
         screen: SectionsScreen
+    },
+    SingleMaterialScreen:{
+        screen: SingleMaterialScreen,
+        
     },
     TopicScreen: {
         screen: TopicScreen

@@ -1,12 +1,14 @@
 import {Button, View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 
-const MapObjectView = (props) => {
+const MaterialButton = (props) => {
     //Renders a text to a button
     return(
         <View style={styles.container}>
-            <TouchableOpacity  style= {styles.item} onPress={props.onPress}>
+            <TouchableOpacity  style = {styles.item} onPress={props.onPress}>
                 <Text style={styles.itemText}>{props.text}</Text>
+                {/*<View style = {styles.rect}>
+                </View>*/}
             </TouchableOpacity>
         </View>
     )
@@ -15,28 +17,35 @@ const MapObjectView = (props) => {
 var leftSpacing = 5;
 var maxItemWidth = (100 - leftSpacing*2)
 
+
+
 const styles = StyleSheet.create({
-    container: {
+    rect: {
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        alignSelf: 'flex-end',
+        backgroundColor: '#' + Math.floor(Math.random() * 1000000).toString(),
+        flexDirection: 'row',
+        justifyContent: 'center',
 
     },
     item: {
         backgroundColor: '#E3EEFF',
-        borderRadius: 13,
+        borderRadius: 30,
         marginBottom: 15,
         marginTop: 15,
+    
         
         justifyContent: 'center',
         alignItems: "center",
         flexDirection: "row",
         
-        maxWidth: '60%',
-        marginLeft: '20%',
-        aspectRatio: 3.672,
+        maxWidth: '90%',
+        marginLeft: '5%',
+        aspectRatio: 6,
         minWidth: 150,
         flwxWrap: "wrap",
-
-        opacity: 0.8,
-        border: 2,
 
     },
 
@@ -44,11 +53,11 @@ const styles = StyleSheet.create({
         textAlignVertical: "center",
         textAlignHorizontal: "center",
         textAlign: "center",
-        fontFamily: "Hibbo",
+        fontFamily: "Open Sans Hebrew",
         fontSize: 20,
         color: '#3B3B30',  
     },
 
 });
 
-export default MapObjectView
+export default MaterialButton

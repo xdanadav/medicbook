@@ -1,23 +1,36 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import {Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import map from '../global/map' 
 import TopBanner from '../components/TopBanner'
 import MapObjectView from '../MVC/View/MapObjectView'
 
+import facade from '../MVC/Model/Facade'
 
 
-let basePointer =  map
-let pagePointer = map
 
+let pagePointer = null
 
 export default function SectionsScreen({navigation}){
-    let allButtonNames = map.children;
+
+    
+  
+    //mapPointer = facade.map
+    
+    //Adding A Button for each map child
+    let allButtonNames = facade.map.getChild("TrainingBranches").getChild("Medics").children;
+    //Adding a Dynamic instance that can effect the html file
     const [mapObjectViews, setMapObjectViews] = useState(allButtonNames);
 
+    
 
+
+    
+    
+
+    //HandlePress navigates to the written topic based on the index
     const handlePress = (index) => {
-
-      if (pagePointer.children[index].children.length == 0) {
+      if(pagePointer ==  null) pagePointer = facade.map.getChild("TrainingBranches").getChild("Medics")
+      if (pagePointer.children[index].children.length == 0) { 
         console.log("Navigating to topic screen...")
         navigation.navigate("TopicScreen", pagePointer.children[index].name);
         return
@@ -27,6 +40,7 @@ export default function SectionsScreen({navigation}){
       setMapObjectViews(allButtonNames)
     }
 
+    //Function that triggers on native button press and navigates back
     const goBack = () => {
       if(pagePointer.parent == null) return
       pagePointer = pagePointer.parent
@@ -37,8 +51,9 @@ export default function SectionsScreen({navigation}){
 
     return(
         <View style={styles.container}>
-            {/*Top Banner requires goBack function*/}
-            <TopBanner goBackFunction={()=>goBack}/>
+            
+          {/*Top Banner requires goBack function*/}
+          <TopBanner goBackFunction={()=>goBack}/>
             
             {/*Back Button to go back to the other screen*/}
             <TouchableOpacity style={styles.backButtonContainer} onPress={()=>{goBack()}}>
@@ -51,19 +66,20 @@ export default function SectionsScreen({navigation}){
                 {
                     //for each of the mapObjects we construct a View that will display it's name
                     mapObjectViews.map((item, index)=> {
-                    return <MapObjectView key={index} text={item.name} onPress={() => handlePress(index)}/>
+                    return <MapObjectView key={index} text={item.displayName} onPress={() => handlePress(index)}/>
                     })
                 }
                 </View>
             </View>
         </View>
-
-
     );
 }
 
 
 const styles = StyleSheet.create({
+    navigationOptions:{
+      headerShown: false
+    },
     backButtonContainer:{
       width: '10%',
       height: '10%',

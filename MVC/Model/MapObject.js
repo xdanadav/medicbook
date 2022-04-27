@@ -1,8 +1,21 @@
 class MapObject{
     constructor(name){
-        this.name= name
+        this.name = name
+        this.displayName = name
         this.children = []
         this.parent = null
+    }
+
+    static displayNameInstance(name, displayName){
+        let mapObject = new MapObject(name);
+        mapObject.setDisplayName(displayName);
+        return mapObject
+
+    }
+
+    setDisplayName(displayName){
+        this.displayName = displayName
+
     }
 
     addChild(mapObjectChild){
@@ -11,7 +24,10 @@ class MapObject{
     }
 
     getChild(name){
-        for (child in this.children){
+        console.log("outloop print", this.children)
+        for (var index in this.children){
+            var child = this.children[index]
+            console.log("\n\n\n\nIn loop print", child.name)
             if(child.name == name){
                 return child;
             }

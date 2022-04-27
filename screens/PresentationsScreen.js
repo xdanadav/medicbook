@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     },
     defaultText: {
         fontSize: 50,
-        color: "#fff"
+        color: "#F17581"
 
     },
 });
