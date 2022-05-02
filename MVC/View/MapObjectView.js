@@ -1,4 +1,5 @@
 import {Button, View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import globalStyles from '../../global/Style'
 
 
 const MapObjectView = (props) => {
@@ -6,7 +7,7 @@ const MapObjectView = (props) => {
     return(
         <View style={styles.container}>
             <TouchableOpacity  style= {styles.item} onPress={props.onPress}>
-                <Text style={styles.itemText}>{props.text}</Text>
+                <Text style={globalStyles.defaultText}>{props.text}</Text>
             </TouchableOpacity>
         </View>
     )

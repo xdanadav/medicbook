@@ -1,11 +1,24 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Button, Text } from 'react-native';
+import {Linking, StyleSheet, View, Button, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 import VideoThumbnail from '../components/VideoThumbnail'
 import facade from '../MVC/Model/Facade';
 
 export default function VideoScreen({navigation}){
     let videoIds = []
     let thumbnails = []
+
+    const loadInBrowser = (videoId) => {
+        Linking.openURL("https://www.youtube.com/watch?v=" + videoId).catch(err => console.error("Couldn't load page", err));
+    };
+    function handlePress(index){
+        loadInBrowser(videoIds[index])
+        //navigation.navigate("YoutubePlayerScreen")
+    }
+
+    
+        
+    
+
 
     setVideoList()
     function setVideoList(){
@@ -28,18 +41,13 @@ export default function VideoScreen({navigation}){
 
     return(
         <View style={styles.container}>
-            {videos.length == 0? <Text style={styles.noVideos}>אין סרטונים בנושא זה</Text>:
-        
-        
-            videos.map((item, index)=>{
-                return(
-                    <VideoThumbnail key={index} text={videoNames[index]} VideoId={item}/>
-                )
-            })
-        }
-            
+            {videos.length == 0? <Text style={styles.noVideos}>אין סרטונים בנושא זה</Text> :
+                <FlatList style={styles.videoList} data={videos}
+                    numColumns={2}
+                    renderItem = {({item, index}) => <VideoThumbnail key={index} text={videoNames[index]} VideoId={item} onPress={()=>handlePress(index)}/>}>
+                </FlatList>
 
-
+            }
         </View>
     )   
 }
@@ -52,26 +60,14 @@ const styles = StyleSheet.create({
         textAlign: "center",
         justifyContent: 'center',
         flexWrap: 'wrap',
-        alignItems: 'flex-start' // if you want to fill rows left to right
-    },
-    item: {
-        width: '40%', // is 50% of container width
-        aspectRatio: 1,
-        backgroundColor: "#EAEAEA",
-        borderRadius: 20,
-        marginBottom: 10,
-        marginTop: 10,
-        marginLeft: 10,
-        marginRight: 10,
-    },
-    defaultText: {
-        fontSize: 50,
-        color: "#fff"
-
+        alignItems: 'flex-start', // if you want to fill rows left to right
     },
     noVideos:{
         fontSize: 100,
         alignSelf: "center",
         fontWeight: 'bold'
+    },
+    videoList:{
+        zindex: 10,
     }
 });

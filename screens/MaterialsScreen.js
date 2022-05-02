@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Button, Text } from 'react-native';
+import {StyleSheet, View, Button, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import globalStyle from '../global/Style'
 
 //Projects modules
 import facade from '../MVC/Model/Facade'
 import MapObjectView from '../MVC/View/MapObjectView'
 import MaterialButton from '../MVC/View/MaterialButton'
+import BackButton from '../components/BackButton';
 
 
 export default function MaterialScreen({navigation}){
@@ -45,9 +47,8 @@ export default function MaterialScreen({navigation}){
 
     return(
         <View style={styles.container}>
-            
-            {things.length == 0 ? 
-            <Text style ={styles.defaultText}> אין קבצים בקטגוריה הזאת {navigation.state.params}</Text> : 
+            {/*things.length == 0 ? 
+            <Text style ={styles.noMaterials}> אין קבצים בקטגוריה הזאת {navigation.state.params}</Text> : 
                 <View styles={styles.items}>   
                         {
                             topic.map((item, index)=> {
@@ -57,11 +58,17 @@ export default function MaterialScreen({navigation}){
                             })
                         }
                 </View>
+                    */}
+            {things.length == 0?  <Text style ={styles.noMaterials}> אין קבצים בקטגוריה הזאת</Text>:
+                <FlatList data={topic}
+                    numColumns={1}
+                    renderItem = {({item, index}) => <MaterialButton key={index} text={item} onPress={()=>materialPress(index)}/>}>
+                </FlatList>
             }
             
-            
-            
-        
+
+
+
         </View>
     )
     
@@ -80,8 +87,33 @@ const styles = StyleSheet.create({
         color: "#fff"
 
     },
+    noMaterials:{
+        fontSize: 100,
+        alignSelf: "center",
+        fontWeight: 'bold'
+    },
     items:{
         alignItems: "right",
         paddingRight: -100,
-    }
+        zindex: 0,
+    },
+    backButtonContainer:{
+        width: '10%',
+        height: '10%',
+        width: '10%',
+        height: '10%',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        zindex: 1,
+    },
+    backButton:{
+        width: '100%',
+        height: '100%',
+        resizeMode: "contain",
+        alignSelf: "flex-end",
+        position: 'static',
+    },
 });

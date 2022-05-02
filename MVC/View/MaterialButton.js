@@ -1,12 +1,12 @@
 import {Button, View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-
+import globalStyles from '../../global/Style'
 
 const MaterialButton = (props) => {
     //Renders a text to a button
     return(
         <View style={styles.container}>
             <TouchableOpacity  style = {styles.item} onPress={props.onPress}>
-                <Text style={styles.itemText}>{props.text}</Text>
+                <Text style={globalStyles.defaultText}>{props.text}</Text>
                 {/*<View style = {styles.rect}>
                 </View>*/}
             </TouchableOpacity>
@@ -16,8 +16,6 @@ const MaterialButton = (props) => {
 
 var leftSpacing = 5;
 var maxItemWidth = (100 - leftSpacing*2)
-
-
 
 const styles = StyleSheet.create({
     rect: {

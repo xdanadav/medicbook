@@ -11,8 +11,9 @@ import facade from './MVC/Model/Facade'
 
 
 export default function App() {
+  
   return (
-    <Navigator/>
+    <Navigator options={{ headerShown: false }}/>
   ); 
 }
 

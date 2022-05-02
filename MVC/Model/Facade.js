@@ -55,7 +55,7 @@ class Facade{
   }
 
   setMap(){
-    this.map = new MapObject("OverAllMapView")
+    this.map = MapObject.displayNameInstance("OverAllMapView", "כללי")
     let baseFunctionMapPointer = this.map
     //Map Subject Set Up
     this.structureSnapShot.forEach(function(_branch){
@@ -97,7 +97,14 @@ class Facade{
     return false;
   }
 
-  readAllMaterials(){
+  didMaterialsLoad(){
+    return this.materials != null
+  }
+  didVideosLoad(){
+    return this.videos != null
+  }
+
+  readAllMaterials(callbackMethod){
     let startCountRef = ref(this.database, 'SortedMaterials/')
     onValue(startCountRef, (snapshot) => {
       let array = [];
@@ -108,9 +115,10 @@ class Facade{
       this.materials = array
       this.materialsPointer = snapshot.child("SortedMaterials")
       this.materialsSnapshot = snapshot
+      callbackMethod()
     });
   }
-  readAllVideos(){
+  readAllVideos(callbackMethod){
     let youtubeRef = ref(this.database, 'SortedVideos/')
     onValue(youtubeRef, (snapshot) => {
       let array = [];
@@ -120,6 +128,7 @@ class Facade{
       console.log(array)
       this.videos = array
       this.videosSnapShot = snapshot
+      callbackMethod()
     });
 
   }

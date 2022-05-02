@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Button, Text } from 'react-native';
+import {StyleSheet, View, Button, Text, Image, TouchableOpacity } from 'react-native';
 import MapObjectView from '../MVC/View/MapObjectView';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import TopBanner from '../components/TopBanner';
@@ -8,6 +8,7 @@ import Navigator from '../routes/homeStack';
 import facade from '../MVC/Model/Facade'
 
 import TopicScreenItem from '../components/TopicScreenItem'
+import BackButton from '../components/BackButton';
 
 
 const model = {
@@ -18,11 +19,11 @@ const model = {
 }
 
 
-
-
 export default function topicScreen({navigation}){
     let allMaterial = getFromFacade()
     let [materials, setMaterials] = useState(allMaterial);
+
+    
 
 
     const LeftActions = () => {
@@ -32,6 +33,10 @@ export default function topicScreen({navigation}){
     }
     const goBack = () => {
         navigation.navigate("SectionsScreen");
+    }
+
+    const allowForwardNavigation = () =>{
+
     }
 
     const segueTo = (index) =>{
@@ -57,24 +62,22 @@ export default function topicScreen({navigation}){
         return
     }
     return(
+        
         <View style={styles.container}>
+            <BackButton onPress={() => navigation.goBack()}/>
             <View style={styles.tasksWrapper}>
-                <Swipeable
-                    renderLeftActions={LeftActions}
-                    onSwipeableLeftOpen={goBack}
-                    >
-                    <View styles={styles.items}>   
-                    {
-                        materials.map((item, index)=> {
-                        return(
-                                <TopicScreenItem key = {index} text={item} onPress={() => segueTo(index)}/>       
-                        )
-                        })
-                    }
-                    </View>
-                    
 
-                </Swipeable>
+            <View styles={styles.items}>   
+            {
+                materials.map((item, index)=> {
+                return(
+                        <TopicScreenItem key = {index} text={item} onPress={() => segueTo(index)}/>       
+                )
+                })
+            }
+            </View>
+                
+
             </View>
         </View>
     )
@@ -136,6 +139,24 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontWeight: 600,
         padding: 20,
+    },
+    backButtonContainer:{
+        width: '10%',
+        height: '10%',
+        width: '10%',
+        height: '10%',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0
+    },
+    backButton:{
+        width: '100%',
+        height: '100%',
+        resizeMode: "contain",
+        alignSelf: "flex-end",
+        position: 'static',
     },
   
 });

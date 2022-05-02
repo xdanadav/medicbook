@@ -1,12 +1,12 @@
 import {Button, View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-
+import globalStyles from '../global/Style'
 
 const TopicScreenItem = (props) => {
     //Renders a text to a button
     return(
         <View style={styles.container}>
             <TouchableOpacity  style = {styles.item} onPress={props.onPress}>
-                <Text style={styles.itemText}>{props.text}</Text>
+                <Text style={globalStyles.defaultText}>{props.text}</Text>
                 {/*<View style = {styles.rect}>
                 </View>*/}
             </TouchableOpacity>
@@ -35,13 +35,14 @@ const styles = StyleSheet.create({
         borderRadius: 500,
         marginBottom: 15,
         marginTop: 15,
+        marginRight: 15,
     
         
         justifyContent: 'center',
         alignItems: "center",
         flexDirection: "row",
         
-        width: '90%',
+        width: '70%',
         marginLeft: '5%',
         aspectRatio: 1,
         minWidth: 150,

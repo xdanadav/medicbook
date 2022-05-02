@@ -1,16 +1,23 @@
 import react from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import globalStyles from '../global/Style'
+
 
 const VideoThumbnail = (props) => {
     let youtubeThumbnailUrl = "https://img.youtube.com/vi/" + props.VideoId + "/sddefault.jpg"
-
+    let charaterLimit = 40
+    let displayedVideoName = props.text.slice(0, Math.min(charaterLimit, props.text.length))
+    if (displayedVideoName.length < props.text.length){
+        console.log("Shoter")
+        displayedVideoName += "..."
+    }
     return(
-        <View style={styles.item}>
+        <TouchableOpacity style={styles.item} onPress={props.onPress}>
             <View style={styles.Image}>
                 <Image style={{width: '100%', height: '100%', borderRadius: 10 }} resizeMode="cover" source={{uri: youtubeThumbnailUrl}}/>
             </View>
-            <Text style={styles.thumbnailText}>{props.text}</Text>
-        </View>
+            <Text style={globalStyles.youtubeTumbnailText}>{displayedVideoName}</Text>
+        </TouchableOpacity>
     )
 }
 
