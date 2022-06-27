@@ -2,8 +2,8 @@
 import React, {useState} from 'react';
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
-import Navigator from './routes/homeStack'
-import facade from './MVC/Model/Facade'
+import Navigator from './src/routes/homeStack'
+import facade from './src/MainClasses/Facade'
 
 //TODO: Replace the start loading of the materials to a better place
 
