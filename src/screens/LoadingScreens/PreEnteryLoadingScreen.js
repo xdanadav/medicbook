@@ -1,9 +1,9 @@
 import React, {useRef, useState} from 'react';
 import {Animated, StyleSheet, View, Button, Text, Image } from 'react-native';
-import facade from '../../MainClasses/Facade'
+import facade from '../../mainClasses/DatabaseFacade'
 import LottieView from 'lottie-react-native';
 import LoadingAnimation from '../../../res/components/LoadingAnimation'
-import * as ReactDOM from 'react-dom';
+
 
 
 class Person{
@@ -28,22 +28,25 @@ export default function PreEnteryLoadingScreen({navigation}){
     const translation = useRef(
         new Animated.Value(0)
     ).current;
-    
     const signMovingUpAmount = -240
     if(!facade.isMapSet()){
+        console.log("calling readStructure()")
+      facade.readQuestions()
       facade.readStructure(navigateNextScreen)
       facade.readAllMaterials(navigateNextScreen)
       facade.readAllVideos(navigateNextScreen)
+      
     }
 
     let [infoCounter, setInfoCounter] = useState(0)
     function navigateNextScreen(){
+        console.log("call back method called")
         //We need for all the request to come back... 3 requests currently
         //When it is called for the third time, it means all is loaded and we can navigate to the next screens
         if(infoCounter >= 2){
             Animated.timing(translation, {
                 toValue: signMovingUpAmount,
-                duration: 1000,
+                duration: 50,
                 delay: 20,
                 }).start(navigateNext);  
         }

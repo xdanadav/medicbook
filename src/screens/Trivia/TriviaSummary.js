@@ -3,35 +3,32 @@ import {global} from '../../global/Style'
 import {Animated, ScrollView, Image, StyleSheet, View, Button, Text } from 'react-native';
 import TriviaAnswer from '../../../res/components/Trivia/TriviaAnswer'
 import QuestionTitle from '../../../res/components/Trivia/QuestionTitle'
+import SummaryTicket from '../../../res/components/Trivia/SummaryTicket'
 import { back } from 'react-native/Libraries/Animated/Easing';
 import { Easing } from 'react-native-reanimated';
 import BackButton from '../../../res/components/BackButton';
 import WrongButtonFragment from '../../Fragments/WrongButtonFragment'
 
+import TriviaSummaryGlass from '../../../src/Fragments/TriviaSummaryGlass'
 
 
 
-function doNothing(){
-    console.log("doing Nothing")
-}
 
-export default function TriviaScreen({navigation}){
-    const [firstRun, setFirstRun] = useState(true)
-    console.log(navigation.state.params)
-    if(firstRun){
-        console.log("starting reading")
-        setFirstRun(false)  
-    }    
+export default function TriviaSummary({navigation}){
+    const [questions, setQuestions] = useState(navigation.state.params.questions)
+    const [numberOfCorrectAnswers, setNumberOfCorrectAnswers] = useState(checkNumberOfCorrectAnswers())  
     
-    
-    function moveForward(){
-        navigation.navigate("QuestionsScreen", navigation.state.params)
-    }
+    function checkNumberOfCorrectAnswers(){
+        let correctAnswers = 0
+        for(let i = 0; i < questions.length; i++)
+        {
+            if(questions[i].wasCorrect){
+                correctAnswers += 1
+            }
+        }
+        return correctAnswers
 
-    function goBack(){
-        navigation.goBack()
     }
-
     
     const transitionOpacity = useRef(
         new Animated.Value(1)
@@ -45,15 +42,19 @@ export default function TriviaScreen({navigation}){
         outputRange: ['0deg', '360deg']
     })
 
-    
+    function goBack(){
+        navigation.pop(3)
+    }
 
     // First set up animation 
     
 
     
-    const [popUpVisible, setPopUpVisible] = useState(false)
-    const [popUpText, setPopUpText] = useState('')
-    const [popUpTextIndex, setPopUpTextIndex] = useState(0)
+    const [popUpVisible, setPopUpVisible] = useState(false);
+    const [popUpText, setPopUpText] = useState('');
+    const [popUpTextIndex, setPopUpTextIndex] = useState(0);
+
+    const [glassVisible, setGlassVisible] = useState(false);
 
     
 
@@ -125,16 +126,22 @@ export default function TriviaScreen({navigation}){
            
     }
 
+    function navigateToRecap(index){
+        navigation.navigate("QuestionRecap", {
+            question: questions[index], 
+            index: index, 
+            totalQuestions: questions.length,})
+    
+        console.log("Navigating to questionRecap", questions.length)
+    }
+
     startAnimation()
 
-    function wrongButtonPress(){
-        let possibleTexts = ["לא, לא זה", "אמרנו לא זה","תנסה כפתור אחר אולי", "מה קרה לך, חביבי?", "פאשלה....", "וואי וואי אתה מוגזם", "איך עברת צו ראשון תגיד לי", "קיבינימט"]
-        setPopUpVisible(true)
-        setPopUpTextIndex(popUpTextIndex + 1)
-        console.log(popUpTextIndex, popUpTextIndex  % possibleTexts.length)
-        setPopUpText(possibleTexts[popUpTextIndex  % possibleTexts.length])
-
+    function watchMistakes(){
+        setGlassVisible(true)
+        console.log("Clicked")
     }
+    console.log(questions, questions.length, numberOfCorrectAnswers)
 
     return(
         <View style={styles.container}>
@@ -145,13 +152,15 @@ export default function TriviaScreen({navigation}){
                 <Image style={styles.fullSize} source={require('../../../res/assets/ Trivia/Group 58 (1).png')}/>
             </Animated.View>
             <BackButton onPress={goBack}/>
-            <QuestionTitle question={"שאלה 1:"} text={"על מה צריך ללחוץ כדי להתחיל?"}/>
-            <TriviaAnswer text={"על זה"} onPress={moveForward}/>
-            <TriviaAnswer text={"על זה לא"} onPress={wrongButtonPress}/>
-            <TriviaAnswer text={"על זה בטוח לא"} onPress={wrongButtonPress}/>
+            <QuestionTitle question={"אתם המנצחים"} text={"שכוייח"}/>
+            <SummaryTicket numOfCorrectAnswers={numberOfCorrectAnswers} totalAnswers={questions.length} question={"אתם המנצחים"} text={"שכוייח"} watchMistakesFunc={watchMistakes}/>
+            
             {/* Pop Up */}
             {popUpVisible? <WrongButtonFragment text={popUpText} closeSelf={()=>{setPopUpVisible(false)}} visible={false}/>:
                 <View/>
+            }
+            {glassVisible? <TriviaSummaryGlass questions={questions} navigationFunc={navigateToRecap} closeSelfFunc={()=>{setGlassVisible(false)}}/>: <View/>
+
             }
             
             

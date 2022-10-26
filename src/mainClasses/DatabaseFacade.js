@@ -1,12 +1,11 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, onValue} from "firebase/database";
+import { getDatabase, child, ref, set, onValue, get} from "firebase/database";
 import storage from "@react-native-firebase/storage"
 
-
 import MapObject from "./MapObject";
-import Question from "./Question"
 import { Array } from "core-js";
+import Question from "../mainClasses/Question"
 // Initialize Firebase
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -24,12 +23,12 @@ const firebaseConfig = {
 };
 
 
-class Facade{
+class DatabaseFacade{
   constructor() {
     //Starting the facade by connecting the server or whatever the getDataBase() function does
-    console.log("change already") 
     this.app = initializeApp(firebaseConfig);
     this.database = getDatabase(this.app);
+    this.dbRef = ref(getDatabase());
     
     //Loads the material from the data base, probably all of the materials. 
     //Should be changed to only the topic's material in the future
@@ -41,40 +40,20 @@ class Facade{
     //TODO: check if the structure pointer can be made before we got the database
     this.structurePointer = ref(this.database, 'Structure/')
     this.structureSnapShot = null
-    this.map = new MapObject("newObject")
+    this.map = null //new MapObject("newObject")
+    //console.log(storage())
 
     this.questionsPointer = ref(this.database, 'TriviaQuestions')
     this.questionsSnapShot = null
-    //console.log(storage())
   }
 
   readStructure(callbackMethod){
+      console.log("please loand")
     onValue(this.structurePointer, (snapshot) => {
       this.structureSnapShot = snapshot
       this.setMap(this.map, snapshot)
       callbackMethod()
     })
-  }
-
-  readQuestions(){
-    onValue(this.questionsPointer, (snapshot) => {
-      this.questionsSnapShot = snapshot
-      console.log("Read questions")
-      this.getTopicQuestions("anamnesis")
-    })
-  }
-
-  getTopicQuestions(topic){
-    console.log("Questions Getting", this.questionsSnapShot)
-    let questions = []
-    this.questionsSnapShot.forEach(function(_question){
-        
-        if(_question.child("topic").val().toLowerCase().startsWith(topic.toLowerCase())){
-          questions.push(new Question(_question.child("question").val(), _question.child("correctAnswer").val(), _question.child("answers").val()))
-        }
-        
-    })
-    return questions
   }
 
   print(msg){
@@ -138,6 +117,35 @@ class Facade{
     this.map.sortByIndex()    
   }
 
+  printSomthing(){
+    console.log("Printing somthing...")
+  }
+
+
+  readQuestions(callbackMethod){
+    
+    let startCountRef = ref(this.database, 'TriviaQuestions/')
+    onValue(startCountRef, (snapshot) => {
+      let array = [];
+      console.log("SnapShot", snapshot.val())
+      this.questionsPointer = snapshot.child("TriviaQuestions")
+      this.questionsSnapShot = snapshot
+      
+    });
+  }
+  getTopicQuestions(topic){
+    console.log(topic, "Questions Getting", this.questionsSnapShot)
+    let questions = []
+    this.questionsSnapShot.forEach(function(_question){
+        
+        if(_question.child("topic").val().toLowerCase().startsWith(topic.toLowerCase())){
+          questions.push(new Question(_question.child("question").val(), _question.child("correctAnswer").val(), _question.child("answers").val()))
+        }
+        
+    })
+    return questions
+  }
+
   setMapRecorsivly(mapObject, snapShot){
 
     if(!snapShot.hasChildren()){
@@ -149,10 +157,8 @@ class Facade{
       //We are in the Branches layer.
       //Ignoring the "Name" parameter
       if(_child.key != "Name" && _child.key != "Index"){
-        console.log(_child)
         //Creating A node for the map that holds the VariableName and the display name
         let branch = MapObject.displayNameAndIndexInstance(_child.key, _child.child("Name").val(), _child.child("Index").val())
-        console.log("branch: ", branch)
         mapObject.addChild(branch)
         setMapRecorsivly(branch, _child)
         /// branch = MapObject.displayNameInstance(*Branch Name*, *Branch displayName*)
@@ -189,6 +195,7 @@ class Facade{
       callbackMethod()
     });
   }
+
   readAllVideos(callbackMethod){
     let youtubeRef = ref(this.database, 'SortedVideos/')
     onValue(youtubeRef, (snapshot) => {
@@ -202,16 +209,10 @@ class Facade{
     });
 
   }
-  
-  getTopicMaterials(topic){
-    let materialsList = []
-    this.materialsSnapshot.child(topic).forEach(function(_child){
-      materialsList.push(_child.child("Name").val())
-    })
-    return materialsList
-  }
 }
 
-let facade = new Facade();
+let facade = new DatabaseFacade();
+
+
 
 export default facade;

@@ -10,6 +10,8 @@ if(windowWidth > 500){
 }
 
 
+
+
 const globalStyles = StyleSheet.create({
     defaultText: {
         textAlignVertical: "center",
@@ -70,5 +72,5 @@ const globalStyles = StyleSheet.create({
   export const global = {
       globalStyles: globalStyles,
       preferedFontItemSize: preferedFontItemSize,
-      fontFamily: "OpenSansHebrew-Bold"
+      fontFamily: 'Secular One'
   }

@@ -3,12 +3,24 @@ import { requireNativeViewManager } from 'expo-modules-core';
 import { Dimensions } from 'react-native';
 
 const TopBanner = (props) =>{
-    const element = (
-        <View style={styles.banner}>
+    const element1 = (
+
+        <View style={[styles.banner, {position: 'fixed', bottom: 0}]}>
             <Image style={styles.rectengles} id="output" source={require('../assets/ChooseBranch/BottomBannerRectengles.png')}/>
+        </View> 
+        
+        
+    )
+    const element2 = (
+        <View style={styles.banner}>
+                <Image style={styles.rectengles} id="output" source={require('../assets/ChooseBranch/BottomBannerRectengles.png')}/>
         </View>
     )
-    return element
+
+    if(props.stickToBottom){
+        return element1
+    }
+    return element2
 }
 
 const windowWidth = Dimensions.get('window').width;

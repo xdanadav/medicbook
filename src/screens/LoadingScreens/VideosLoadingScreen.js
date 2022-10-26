@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, View, Button, Text } from 'react-native';
-import facade from '../../MainClasses/Facade'
+import facade from '../../mainClasses/DatabaseFacade'
 
 export default function DefaultScreen({navigation}){
     

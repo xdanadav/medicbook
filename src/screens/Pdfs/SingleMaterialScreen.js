@@ -1,12 +1,15 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Button, Text, Image, TouchableOpacity } from 'react-native';
-import facade from '../../MainClasses/Facade'
+import {WebView, StyleSheet, View, Button, Text, Image, TouchableOpacity } from 'react-native';
+import facade from '../../mainClasses/DatabaseFacade'
+//import {Document, Page} from 'react-pdf';
 //import {WebView} from 'react-native-webview';
 
 
 
 export default function SingleMaterialScreen({navigation}){
-    let url = facade.getMaterialUrl(navigation.state.params.currentTopic, navigation.state.params.currentMaterial)
+    let url =  facade.getMaterialUrl(navigation.state.params.currentTopic, navigation.state.params.currentMaterial)  
+    console.log(url)
+    //url = "https://docs.google.com/viewer?url=" + url + "&embedded=true"
     
     function setTitle(){
         console.log("setting title")
@@ -19,9 +22,11 @@ export default function SingleMaterialScreen({navigation}){
         <View style={styles.container}>
             {/*<Text style ={styles.defaultText}> Default Page</Text>
                 <WebView style={{width: '100%', height: '100%'}} source = {{uri = navigation.state.params}}/>
-            */}
+            
             <TouchableOpacity  style = {styles.item} onPress={setTitle}>{navigation.state.params.currentMaterial}</TouchableOpacity>
+            */}
             <iframe style={{width: '100%', height: '100%'}} src={url}/>
+           
         </View>
     )   
 }

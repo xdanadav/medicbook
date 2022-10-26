@@ -14,10 +14,12 @@ import PreEnteryLoadingScreen from '../screens/LoadingScreens/PreEnteryLoadingSc
 import YoutubePlayerScreen from '../screens/Videos/YoutebePlayerScreen';
 import VideosLoadingScreen from '../screens/LoadingScreens/VideosLoadingScreen'
 import AddMaterialScreen from '../screens/Upload/AddMaterialScreen'
+import QuestionsScreen from '../screens/Trivia/QuestionsScreen'
+import TriviaSummary from '../screens/Trivia/TriviaSummary'
+import QuestionRecap from '../screens/Trivia/QuestionRecap'
 
 
 let screens = {
-    
     PreEnteryLoadingScreen : {
         screen: PreEnteryLoadingScreen,
         navigationOptions: {
@@ -25,17 +27,40 @@ let screens = {
         }
     },
     TriviaScreen: {
-        screen: TriviaScreen
+        screen: TriviaScreen,
+        navigationOptions: {
+            headerShown: false,
+        }
     },
-    AddMaterialScreen:{
-        screen: AddMaterialScreen
-    },
+    
     SectionsScreen: {
         screen: SectionsScreen,
         navigationOptions: {
             headerShown: false
         }
     },
+    
+    QuestionRecap: {
+        screen: QuestionRecap,
+        navigationOptions: {
+            headerShown: false,
+        }
+    },
+    TriviaSummary: {
+        screen: TriviaSummary,
+        navigationOptions: {
+            headerShown: false,
+        }
+    },
+    
+    DefaultScreen: {
+        screen: DefaultScreen
+    },
+    
+    AddMaterialScreen:{
+        screen: AddMaterialScreen
+    },
+    
     SingleMaterialScreen:{
         screen: SingleMaterialScreen,
         navigationOptions: {
@@ -53,9 +78,7 @@ let screens = {
             headerShown: false,
         }
     },
-    DefaultScreen: {
-        screen: DefaultScreen
-    },
+    
     MaterialsScreen: {
         screen: MaterialsScreen,
         navigationOptions:{
@@ -74,7 +97,13 @@ let screens = {
     },
     VideosLoadingScreen: {
         screen: VideosLoadingScreen,
-    }
+    },
+    QuestionsScreen: {
+        screen: QuestionsScreen,
+        navigationOptions:{
+            headerShown: false,
+        }
+    },
 }
 
 const HomeStack = createStackNavigator(screens);

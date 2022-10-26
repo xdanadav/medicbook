@@ -45,9 +45,9 @@ const styles = StyleSheet.create({
     color: '#0C4F44',
     opacity: 1,
     right: 20,
-    fontSize: global.preferedFontItemSize * 0.8,
+    fontSize: global.preferedFontItemSize * 0.5,
     fontWeight: 'bold',
-    fontFamily: global.fontFamily
+    fontFamily: 'Heebo'
   },
 
   Image: {

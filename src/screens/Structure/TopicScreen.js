@@ -5,7 +5,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import TopBanner from '../../../res/components/TopBanner';
 import SectionsScreen from './SectionsScreen';
 import Navigator from '../../routes/homeStack';
-import facade from '../../MainClasses/Facade'
+import facade from '../../mainClasses/DatabaseFacade'
 
 import TopicScreenItem from '../../../res/components/TopicScreenItem'
 import BackButton from '../../../res/components/BackButton';
@@ -31,9 +31,7 @@ export default function topicScreen({navigation}){
             <Navigator/>
         )
     }
-    const goBack = () => {
-        navigation.navigate("SectionsScreen");
-    }
+    
 
     const allowForwardNavigation = () =>{
 

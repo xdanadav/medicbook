@@ -1,18 +1,25 @@
 import {Dimensions, Button, View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {global} from '../../src/global/Style'
+import {global} from '../../../src/global/Style'
 
-const maxLetters = 30
+const maxLetters = 40
 let preferedFontItemSize = global.preferedFontItemSize
 
 
 
-const MapObjectView = (props) => {
+const TriviaAnswer = (props) => {
     //Renders a text to a button
     let {text, textItemFontSize} = getTextAndTextItemFontSize(props.text)
     
+    let backgroundColor = "#FEFEFE"
+    if(props.correctAnswer){
+        backgroundColor = "#00FF00"
+    }
+    else if(props.wrongAnswer){
+        backgroundColor = "#ff0000"
+    }
     return(
         <View style={styles.container}>
-            <TouchableOpacity  style= {styles.item} onPress={props.onPress}>
+            <TouchableOpacity  style= {[styles.item, {backgroundColor: backgroundColor}]} onPress={props.onPress}>
                 <Text style={[styles.itemText,{fontSize: textItemFontSize}]}>{text}</Text>
             </TouchableOpacity>
         </View>
@@ -41,19 +48,18 @@ const styles = StyleSheet.create({
 
     },
     item: {
-        backgroundColor: '#E3EEFF',
-        borderRadius: 13,
-        marginBottom: 15,
-        marginTop: 15,
+        borderRadius: 35,
+        marginBottom: 8,
+        marginTop: 8,
         
         justifyContent: 'center',
         alignItems: "center",
         alignSelf: "center",
         flexDirection: "row",
         
-        width: 60 * WU,
+        width: '90%',
         
-        aspectRatio: 3.672,
+        aspectRatio: 5.5,
         minWidth: 150,
         flwxWrap: "wrap",
 
@@ -74,4 +80,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default MapObjectView
+export default TriviaAnswer

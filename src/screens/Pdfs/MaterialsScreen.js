@@ -3,7 +3,7 @@ import {StyleSheet, View, Button, Text, Image, TouchableOpacity, FlatList } from
 import globalStyle from '../../../src/global/Style'
 
 //Projects modules
-import facade from '../../MainClasses/Facade'
+import facade from '../../mainClasses/DatabaseFacade'
 import MapObjectView from '../../../res/components/MapObjectView'
 import MaterialButton from '../../../res/components/MaterialButton'
 import BackButton from '../../../res/components/BackButton';

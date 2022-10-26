@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 import Navigator from './src/routes/homeStack'
-import facade from './src/MainClasses/Facade'
+import facade from './src/mainClasses/DatabaseFacade'
 
 //TODO: Replace the start loading of the materials to a better place
 

@@ -1,53 +1,119 @@
-import react, {useState, Component} from 'react';
+import react, {useState, Component, useRef} from 'react';
 import { TouchableWithoutFeedback, View, Dimensions, Image, FlatList, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import MaterialButton from './MaterialButton'
+import {global} from '../../src/global/Style'
 import { NavigationEvents } from 'react-navigation';
+import { ScrollView } from 'react-native-gesture-handler';
 
 let icon_size = 80
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+console.log(windowHeight)
 
 function getGlassMenu(props){
-    //["Gilad", "Haharony", "has", "bolobol"]
     
-    let glassMenuWidth = windowWidth
+    let glassMenuWidth = windowWidth //88.6 is the width of the glass compared to the screen
     let flatListWidth = glassMenuWidth - 60
+    
+    const [iconsLocation, setIconsLocation] = useState(0)
 
     let things = [];
-        props.facade.materialsSnapshot.child(props.topic).forEach(function(_child){
-        things.push(_child.child("url").val().split(".pdf")[0]);
+    props.facade.materialsSnapshot.child(props.topic).forEach(function(_child){
+        things.push(_child.child("Name").val())
     })
 
     let [topic, setTopic] = useState(things);
-    //console.log("\n \n \n \n \n \n \n + topic")
+    
     
     function handlePress(index){
-        //console.log(navigation, "topic: ", props.topic, "thing: ", things[index])
-        props.navigationFunction({currentTopic: props.topic, currentMaterial: things[index]})
-        
+        props.navigationFunction("SingleMaterialScreen", {currentTopic: props.topic, currentMaterial: things[index]})
+    }
+
+    //Navigation Functions
+    function navigateToYoutube(){
+        props.navigationFunction("VideosScreen", props.topic)
+    }
+
+    function navigateToTrivia(){
+        props.navigationFunction("TriviaScreen", {topicChosen: props.topic})
+    }
+
+    const onScroll = () => { 
+        if (scrollListener.current) {
+          const { scrollTop, scrollHeight, clientHeight } = scrollListener.current;
+            
+          if (scrollTop + clientHeight >= scrollHeight * 0.85) {
+            if (!reachedBottom) {
+              setReachedBottom(true);
+              console.log("reached bottom")
+            }
+          } else {
+            if (reachedBottom) {
+              setReachedBottom(false);
+            }
+          }
+        }
+      };
+
+    const screenSizeInPercentage = '215%'
+    const scrollListener = useRef();
+    
+    const [iconsShown, setIconsShown] = useState(true)
+
+    function closeMenu(){
+        setIconsShown(false)
+        props.dismissFunction()
+
     }
 
     return(
 
-            <View style={{position: 'absolute', right: 0, height: '100%', width: glassMenuWidth, zIndex: 100}} >
+            <View style={{position: 'absolute', right: 0, height: screenSizeInPercentage, width: glassMenuWidth, zIndex: 100}} >
+
+                {/* Title */}
                 <View style={[styles.titleContainer, {width: flatListWidth - 10}]}>
                     <Image style={[styles.topicTitleBackground]} source={require('../assets/glassMenu/glassTitle.png')} />
                     <Text style={[styles.topicTitleText, {fontSize : getFontSizeFromLength(props.topicDisplayName.length)}]}> {props.topicDisplayName}</Text>
                 </View>
 
-
-                <TouchableWithoutFeedback style={{zIndex: 100, backgroundColor: 'black', width: 10, height: '100%', position: 'absolute', right: 0}} onPress={props.dismissFunction}>
+                {/*Side close surface */}
+                <TouchableWithoutFeedback style={{zIndex: 100, width: '12.8%', height: '100%', position: 'absolute', right: 0}} onPress={closeMenu}>
                     <View style={{zIndex: 100, width: windowWidth - flatListWidth, height: '100%'}}></View>
                 </TouchableWithoutFeedback>
+                {!iconsShown? <View></View> :
+                    <View style={{zIndex: 100}}>
+                        {/*Trivia Button */}
+                        <TouchableOpacity 
+                            style={[styleIcons.youtube, {left: 0, top: 10}]} 
+                            onPress={navigateToTrivia}>
+                                <Image style={{width: '100%', height: '100%', resizeMode: 'contain'}} source={require('../assets/glassMenu/TriviaIcon.png')} />
+                        </TouchableOpacity>
+
+                        {/*Youtube Button */}
+                        <TouchableOpacity 
+                            style={[styleIcons.youtube, {left: 0, top: "20%"}]} 
+                            onPress={navigateToYoutube}>
+                                <Image style={{width: '100%', height: '100%', resizeMode: 'contain'}} source={require('../assets/glassMenu/YoutubeIcon.png')} />
+                        </TouchableOpacity>
+                    </View>
+                }
+               
+                
+                {/* Background Glass*/}
+                <Image style = {{ zIndex: -1, resizeMode: 'stretch', position: 'absolute', width: '100%', height:'100%'}} source={require('../assets/glassMenu/glass.png')}/> 
+                
+                {/* Background glass blur*/}
+                <View style = {{backdropFilter: 'blur(5px)', zIndex: -2, position: 'absolute', width: '90%', right: 0, height: '100%'}}></View>
+
                 
                 
-                <Image style = {{ zIndex: -1, resizeMode: 'stretch', position: 'absolute', width: '100%', height: '100%'}} source={require('../assets/glassMenu/glass.png')}/> 
-                <FlatList data={topic} style={{position:'absolute', top: 142,right: 0, zIndex: 100,height: windowHeight ,width: flatListWidth}}
+                {/* List of Buttons */}
+                <FlatList data={topic} style={{position:'absolute', top: 142,right: 0, zIndex: 4, width: flatListWidth}}
                     numColumns={1}
                     renderItem = {({item, index}) => <MaterialButton key={item + index.toString()} width={flatListWidth} text={item} onPress={()=>handlePress(index)}/>}>
                 </FlatList>
 
-                {true? <View></View>:
+                {/* true? <View></View>:
                 
             
                 <View style={styles.icons}>
@@ -58,18 +124,18 @@ function getGlassMenu(props){
                     
 
 
-                    <TouchableOpacity style={styleIcons.second} >
+                    <TouchableOpacity style={styleIcons.second} onPress={navigateToYoutube} >
                         <Image style={{width: '100%', height: '100%', resizeMode: 'contain'}} source={require('../assets/glassMenu/youtube_icon.png')} />
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styleIcons.third} >
                         <Image style={{width: '100%', height: '100%', resizeMode: 'contain'}} source={require('../assets/glassMenu/presentation_icon.png')} />
                     </TouchableOpacity>
-
+                    
                     <TouchableOpacity style={styleIcons.fourth} >
-                        <Image style={{width: '100%', height: '100%', resizeMode: 'contain'}} source={require('../assets/glassMenu/trivia_icon.png')} />
+                        <Image style={{width: '100%', height: '100%', resizeMode: 'contain'}} source={require('../assets/glassMenu/trivia_icon.png')}  />
                     </TouchableOpacity>
-                </View>}
+                </View> */}
             </View>  
     )
         
@@ -84,9 +150,11 @@ function materialPress(index){
     console.log(index)
 }
 
+
+
 function getFontSizeFromLength(length){
     let bottomRange = 25
-    let topRange = 60
+    let topRange = 50
 
     let bottomLength = 6
     let topLength = 45
@@ -106,11 +174,13 @@ var maxItemWidth = (100 - leftSpacing*2)
 const styleIcons = StyleSheet.create({
     icons:{
         
+        
+        
     },
     main: { width: icon_size,
             aspectRatio: 1,
             position: 'absolute',
-            top: bottomFromTop(35) - icon_size,
+            bottom: 35, //bottomFromTop(35) - icon_size,
             right: 0, 
             zIndex: -1,
     },
@@ -118,7 +188,7 @@ const styleIcons = StyleSheet.create({
         width: icon_size,
         aspectRatio: 1,
         position: 'absolute',
-        top: bottomFromTop(22) - icon_size,
+        bottom: 22,
         right: icon_size, 
         zIndex: -1,
     },
@@ -126,7 +196,7 @@ const styleIcons = StyleSheet.create({
         width: icon_size,
         aspectRatio: 1,
         position: 'absolute',
-        top: bottomFromTop(22) - icon_size,
+        bottom: 22,
         right: 2*icon_size, 
         zIndex: -1,
         
@@ -135,10 +205,15 @@ const styleIcons = StyleSheet.create({
         width: icon_size,
         aspectRatio: 1,
         position: 'absolute',
-        top: bottomFromTop(22) - icon_size,
+        top: 22,
         right: 3*icon_size, 
         zIndex: -1,
-
+    },
+    youtube: {
+        width: '20%',
+        aspectRatio: 1,
+        position: 'fixed',
+        zIndex: 7
     },
 })
 
@@ -150,7 +225,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 0,
         top: 15,
-        justifyContent: 'center'
+        justifyContent: 'center',
 
     },
     topicTitleBackground:{
@@ -164,16 +239,15 @@ const styles = StyleSheet.create({
     },
     
     topicTitleText:{
-        fontFamily: 'David',
+        fontFamily: 'Heebo',
         fontWeight: 'bold',
         right: 0,
         left: 0,
         marginRight: 'auto',
         marginRight: 'auto',
         width: '90%',
-        zIndex: 10,
-        color: '#0C4F44',
-        
+        zIndex: 6,
+        color: '#100031',
         opacity: '51%',       
     },
     item: {
@@ -215,7 +289,6 @@ const styles = StyleSheet.create({
     items:{
         marginTop: 30,
     },
-
 });
 
 export default getGlassMenu;

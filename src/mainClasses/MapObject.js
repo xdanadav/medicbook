@@ -32,7 +32,6 @@ class MapObject{
     }
 
     getChild(name){
-
         for (var index in this.children){
             var child = this.children[index]
             if(child.name == name){

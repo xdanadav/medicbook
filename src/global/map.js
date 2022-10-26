@@ -1,4 +1,4 @@
-import MapObject from '../MainClasses/MapObject';
+import MapObject from '../mainClasses/MapObject';
 
 let map = null;
 

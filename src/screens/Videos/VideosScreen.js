@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Linking, StyleSheet, View, Button, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 import VideoThumbnail from '../../../res/components/VideoThumbnail'
-import facade from '../../MainClasses/Facade';
+import facade from '../../mainClasses/DatabaseFacade';
 
 export default function VideoScreen({navigation}){
     let videoIds = []
@@ -22,7 +22,7 @@ export default function VideoScreen({navigation}){
 
     setVideoList()
     function setVideoList(){
-        
+        console.log(navigation.state.params)
         let holder = facade.videosSnapShot.child(navigation.state.params + "/")
         holder.forEach(function(_video){
             let id = _video.child("url/").val()
