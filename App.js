@@ -1,20 +1,39 @@
 //import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity, BackHandler } from 'react-native';
 
 import Navigator from './src/routes/homeStack'
+import MainRouter from './src/routes/MainRouter'
 import facade from './src/mainClasses/DatabaseFacade'
+
+
 
 //TODO: Replace the start loading of the materials to a better place
 
 //import BranchesPageController from './MVC/Controller/BranchesPageController'
 
 
-export default function App() {
+class App extends React.Component{
+  componentDidMount(){
+    console.log("Component did mount")
+    BackHandler.addEventListener('hardwareBackPress', function(){
+      return true
+    })
+  }
   
-  return (
-    <Navigator options={{ headerShown: false }}/>
-  ); 
+  
+
+  
+  render() {
+    return(
+      <>
+      {/*<Navigator options={{ headerShown: false }}/>*/} 
+        <MainRouter />
+      </>
+     )
+  }
+   
+  
 }
 
 const styles = StyleSheet.create({
@@ -56,5 +75,7 @@ const styles = StyleSheet.create({
   },
 
 });
+
+export default App;
 
 

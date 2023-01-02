@@ -1,9 +1,10 @@
 import react, {useState, Component, useRef} from 'react';
-import { TouchableWithoutFeedback, View, Dimensions, Image, FlatList, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import { ScrollView,TouchableWithoutFeedback, View, Dimensions, Image, FlatList, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import MaterialButton from './MaterialButton'
 import {global} from '../../src/global/Style'
 import { NavigationEvents } from 'react-navigation';
-import { ScrollView } from 'react-native-gesture-handler';
+import {Material} from '../../src/mainClasses/Material'
+
 
 let icon_size = 80
 const windowWidth = Dimensions.get('window').width;
@@ -14,19 +15,28 @@ function getGlassMenu(props){
     
     let glassMenuWidth = windowWidth //88.6 is the width of the glass compared to the screen
     let flatListWidth = glassMenuWidth - 60
-    
-    const [iconsLocation, setIconsLocation] = useState(0)
-
     let things = [];
+    let materialsList = []; //List of Materials
+
+    let materialList = useRef(null)
+
     props.facade.materialsSnapshot.child(props.topic).forEach(function(_child){
         things.push(_child.child("Name").val())
+        materialsList.push(new Material(_child.child("Name").val(), _child.child("url").val()))
+        
     })
-
     let [topic, setTopic] = useState(things);
+    
+    const [scrollIndex, setScrollIndex] = useState(0)//Saving the scroll index in order to orginize opacity of list items
     
     
     function handlePress(index){
-        props.navigationFunction("SingleMaterialScreen", {currentTopic: props.topic, currentMaterial: things[index]})
+        props.navigationFunction("SingleMaterialScreen", {currentTopic: props.topic, currentMaterial: things[index], material: materialsList[index]})
+    }
+
+    function handleScroll(event){
+        console.log(event.nativeEvent.contentOffset.y)
+        console.log(_materialList.getNativeScrollRef())
     }
 
     //Navigation Functions
@@ -55,7 +65,7 @@ function getGlassMenu(props){
         }
       };
 
-    const screenSizeInPercentage = '215%'
+    const screenSizeInPercentage = '100%'
     const scrollListener = useRef();
     
     const [iconsShown, setIconsShown] = useState(true)
@@ -68,8 +78,8 @@ function getGlassMenu(props){
 
     return(
 
-            <View style={{position: 'absolute', right: 0, height: screenSizeInPercentage, width: glassMenuWidth, zIndex: 100}} >
-
+            <View scrollEnabled={false} style={{position: 'absolute', right: 0, height: screenSizeInPercentage, width: glassMenuWidth, zIndex: 100}} >
+                
                 {/* Title */}
                 <View style={[styles.titleContainer, {width: flatListWidth - 10}]}>
                     <Image style={[styles.topicTitleBackground]} source={require('../assets/glassMenu/glassTitle.png')} />
@@ -83,18 +93,7 @@ function getGlassMenu(props){
                 {!iconsShown? <View></View> :
                     <View style={{zIndex: 100}}>
                         {/*Trivia Button */}
-                        <TouchableOpacity 
-                            style={[styleIcons.youtube, {left: 0, top: 10}]} 
-                            onPress={navigateToTrivia}>
-                                <Image style={{width: '100%', height: '100%', resizeMode: 'contain'}} source={require('../assets/glassMenu/TriviaIcon.png')} />
-                        </TouchableOpacity>
-
-                        {/*Youtube Button */}
-                        <TouchableOpacity 
-                            style={[styleIcons.youtube, {left: 0, top: "20%"}]} 
-                            onPress={navigateToYoutube}>
-                                <Image style={{width: '100%', height: '100%', resizeMode: 'contain'}} source={require('../assets/glassMenu/YoutubeIcon.png')} />
-                        </TouchableOpacity>
+                        
                     </View>
                 }
                
@@ -108,7 +107,9 @@ function getGlassMenu(props){
                 
                 
                 {/* List of Buttons */}
-                <FlatList data={topic} style={{position:'absolute', top: 142,right: 0, zIndex: 4, width: flatListWidth}}
+                <FlatList
+                    data={topic} 
+                    style={{position:'absolute', top: 142,right: 0, zIndex: 4, width: flatListWidth, height: '75%'}}
                     numColumns={1}
                     renderItem = {({item, index}) => <MaterialButton key={item + index.toString()} width={flatListWidth} text={item} onPress={()=>handlePress(index)}/>}>
                 </FlatList>
@@ -141,6 +142,8 @@ function getGlassMenu(props){
         
     
 }
+
+
 
 function bottomFromTop(bottom){
     return windowHeight - bottom 
@@ -248,7 +251,7 @@ const styles = StyleSheet.create({
         width: '90%',
         zIndex: 6,
         color: '#100031',
-        opacity: '51%',       
+        opacity: '80%',       
     },
     item: {
         backgroundColor: '#FFFFFF',
@@ -272,7 +275,7 @@ const styles = StyleSheet.create({
         width: 24,
         height: 24,
         backgroundColor: "#55BCF6",
-        opacity: 0.4,
+        opacity: 1,
         borderRadius: 5,
         marginRight: 15,  
     },

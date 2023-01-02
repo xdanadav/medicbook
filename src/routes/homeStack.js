@@ -22,6 +22,7 @@ import QuestionRecap from '../screens/Trivia/QuestionRecap'
 let screens = {
     PreEnteryLoadingScreen : {
         screen: PreEnteryLoadingScreen,
+        
         navigationOptions: {
             headerShown: false,
         }
@@ -35,6 +36,7 @@ let screens = {
     
     SectionsScreen: {
         screen: SectionsScreen,
+        
         navigationOptions: {
             headerShown: false
         }
@@ -64,7 +66,7 @@ let screens = {
     SingleMaterialScreen:{
         screen: SingleMaterialScreen,
         navigationOptions: {
-            title: 'מסמך pdf',
+            headerShown: false,
         }
         
     },

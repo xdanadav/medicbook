@@ -1,14 +1,20 @@
-import React, {useState} from 'react';
-import {WebView, StyleSheet, View, Button, Text, Image, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {WebView, Dimensions, StyleSheet, View, Button, Text, Image, TouchableOpacity } from 'react-native';
 import facade from '../../mainClasses/DatabaseFacade'
+import BackButton from '../../../res/components/BackButton'
 //import {Document, Page} from 'react-pdf';
 //import {WebView} from 'react-native-webview';
 
 
 
 export default function SingleMaterialScreen({navigation}){
-    let url =  facade.getMaterialUrl(navigation.state.params.currentTopic, navigation.state.params.currentMaterial)  
-    console.log(url)
+    const [url, setUrl] = useState("www.google.com")
+    const [pdfFile, setPdfFile] = useState(null)
+    useEffect(() => {
+        setUrl(facade.getMaterialUrl(navigation.state.params.currentTopic, navigation.state.params.material.url))
+        console.log(url)
+    }, [])
+
     //url = "https://docs.google.com/viewer?url=" + url + "&embedded=true"
     
     function setTitle(){
@@ -17,6 +23,12 @@ export default function SingleMaterialScreen({navigation}){
             title: `Your Updated Title`,
         })
     }
+
+    function goBack(){
+        navigation.goBack()
+    }
+
+    const windowHeight = Dimensions.get('window').height;
     
     return(
         <View style={styles.container}>
@@ -25,7 +37,13 @@ export default function SingleMaterialScreen({navigation}){
             
             <TouchableOpacity  style = {styles.item} onPress={setTitle}>{navigation.state.params.currentMaterial}</TouchableOpacity>
             */}
-            <iframe style={{width: '100%', height: '100%'}} src={url}/>
+            <BackButton onPress={goBack} />
+            {/*<iframe style={{width: '100%', height: "10%"}} src={url}/>*/}
+
+            <iframe style={{width: '100%', height: "90%"}} src={"https://docs.google.com/viewer?url=" + 
+            url + 
+            "&embedded=true"}/>
+            
            
         </View>
     )   

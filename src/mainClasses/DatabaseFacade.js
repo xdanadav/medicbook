@@ -1,11 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getDatabase, child, ref, set, onValue, get} from "firebase/database";
-import storage from "@react-native-firebase/storage"
+import storage, {ref as storageRef, getStorage, getDownloadURL } from "firebase/storage"
 
 import MapObject from "./MapObject";
 import { Array } from "core-js";
 import Question from "../mainClasses/Question"
+import {Material, MaterialType} from "../mainClasses/Material"
 // Initialize Firebase
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -29,6 +30,8 @@ class DatabaseFacade{
     this.app = initializeApp(firebaseConfig);
     this.database = getDatabase(this.app);
     this.dbRef = ref(getDatabase());
+    this.storage = getStorage(this.app)
+    console.log("Material: ", new Material())
     
     //Loads the material from the data base, probably all of the materials. 
     //Should be changed to only the topic's material in the future
@@ -56,15 +59,23 @@ class DatabaseFacade{
     })
   }
 
+  downloadFile(url, callbackmethod){
+    //url: url of the material
+    //callbackmethod: setFunction to the file instance
+
+
+  }
+
   print(msg){
     console.log(msg)
   }
 
-  getMaterialUrl(topic, material){
+  getMaterialUrl(topic, materialUrl){ //, callback){
     //To Do: Make so that the function asks for the specific material token.
-    let firebaseStorageApi = "https://firebasestorage.googleapis.com/v0/b/tilquiz-90d16.appspot.com/o/";
-    let token= "?alt=media&token=94588795-6226-42ad-9f78-7cdb49792ce3"
-    let url = firebaseStorageApi + topic + "%2F" + material +  ".pdf" + token
+    let firebaseStorageApi =  "https://storage.googleapis.com/tilquiz-90d16.appspot.com/" //"https://firebasestorage.googleapis.com/v0/b/tilquiz-90d16.appspot.com/o/"
+    let url = firebaseStorageApi + topic + "%2F" + materialUrl
+    console.log("Topic: ", topic, "Material: ", materialUrl)
+    console.log("Url: ", url)
     return url
   }
 
@@ -133,6 +144,12 @@ class DatabaseFacade{
       
     });
   }
+  isQuestionsInTopic(stateParams){
+    if(this.getTopicQuestions(stateParams.topicChosen).length > 0)
+      return true
+    return false
+  }
+
   getTopicQuestions(topic){
     console.log(topic, "Questions Getting", this.questionsSnapShot)
     let questions = []
@@ -186,8 +203,16 @@ class DatabaseFacade{
     let startCountRef = ref(this.database, 'SortedMaterials/')
     onValue(startCountRef, (snapshot) => {
       let array = [];
-      snapshot.forEach(function(_child){
-        array.push(_child.key);
+      snapshot.forEach(function(_topic){
+        console.log("Topic: ", _topic.key)
+        _topic.forEach(function(_child){
+          console.log("Child: ", _child.val())
+      
+          let currentMaterial = new Material(_child.child("Name") , _child.child("url"))
+          
+          array.push(currentMaterial);
+          console.log(_child.child("Name").val(), _child.child("url").val())
+        })
       })
       this.materials = array
       this.materialsPointer = snapshot.child("SortedMaterials")
@@ -209,10 +234,17 @@ class DatabaseFacade{
     });
 
   }
+  
 }
 
 let facade = new DatabaseFacade();
 
+export function recreateDB(){
+  facade = new DatabaseFacade();
+}
+
+
 
 
 export default facade;
+

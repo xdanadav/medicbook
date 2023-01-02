@@ -5,7 +5,7 @@ import { Dimensions } from 'react-native';
 const TopBanner = (props) =>{
     const element1 = (
 
-        <View style={[styles.banner, {position: 'fixed', bottom: 0}]}>
+        <View style={[styles.banner, {pointerEvents: 'none', position: 'fixed', bottom: 0}]}>
             <Image style={styles.rectengles} id="output" source={require('../assets/ChooseBranch/BottomBannerRectengles.png')}/>
         </View> 
         

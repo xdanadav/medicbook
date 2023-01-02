@@ -7,6 +7,7 @@ import { back } from 'react-native/Libraries/Animated/Easing';
 import { Easing } from 'react-native-reanimated';
 import BackButton from '../../../res/components/BackButton';
 import WrongButtonFragment from '../../Fragments/WrongButtonFragment'
+import facade from '../../mainClasses/DatabaseFacade'
 
 
 
@@ -17,6 +18,8 @@ function doNothing(){
 
 export default function TriviaScreen({navigation}){
     const [firstRun, setFirstRun] = useState(true)
+    const [isQuestionsInTopic, setIsQuestionsInTopic] = useState(facade.isQuestionsInTopic(navigation.state.params))
+
     console.log(navigation.state.params)
     if(firstRun){
         console.log("starting reading")
@@ -25,7 +28,14 @@ export default function TriviaScreen({navigation}){
     
     
     function moveForward(){
-        navigation.navigate("QuestionsScreen", navigation.state.params)
+        console.log("Is questions in topic", isQuestionsInTopic)
+        if(isQuestionsInTopic){
+            navigation.navigate("QuestionsScreen", navigation.state.params)
+        }
+        else{
+            setNoQuestionsPopupVisible(true)
+        }
+        
     }
 
     function goBack(){
@@ -52,6 +62,7 @@ export default function TriviaScreen({navigation}){
 
     
     const [popUpVisible, setPopUpVisible] = useState(false)
+    const [noQuestionsPopupVisible, setNoQuestionsPopupVisible] = useState(false)
     const [popUpText, setPopUpText] = useState('')
     const [popUpTextIndex, setPopUpTextIndex] = useState(0)
 
@@ -153,6 +164,10 @@ export default function TriviaScreen({navigation}){
             {popUpVisible? <WrongButtonFragment text={popUpText} closeSelf={()=>{setPopUpVisible(false)}} visible={false}/>:
                 <View/>
             }
+
+            {noQuestionsPopupVisible? <WrongButtonFragment text={"אין שאלות בנושא זה עדיין"} closeSelf={()=>{setNoQuestionsPopupVisible(false)}} visible={false}/>:
+                <View/>
+            }   
             
             
             

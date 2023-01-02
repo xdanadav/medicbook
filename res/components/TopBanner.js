@@ -6,7 +6,11 @@ const TopBanner = (props) =>{
     const element = (
         <View style={styles.banner}>
             <Image style={styles.rectengles} id="output" source={require('../assets/ChooseBranch/TopBannerRectengles.png')}/>
-            <Image style={styles.medicbookSign} source={require('../assets/ChooseBranch/MedicBook.png')}/>
+            {props.isSign? 
+            <Image style={styles.medicbookSign} source={require('../assets/ChooseBranch/MedicBook.png')}/> :
+            <View></View>
+        }
+            {/**/}
         </View>
     )
     return element

@@ -1,5 +1,5 @@
 import React, {document, WebView, useRef, useEffect, useState} from 'react';
-import { Animated, Dimensions, FlatList, Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { Animated, Dimensions, FlatList, Text, StyleSheet, View, TouchableOpacity, Image,  BackHandler } from 'react-native';
 import map from '../../../src/global/map' 
 import TopBanner from '../../../res/components/TopBanner'
 import BottomBanner from '../../../res/components/BottomBanner'
@@ -7,7 +7,7 @@ import MapObjectView from '../../../res/components/MapObjectView'
 import GlassMenu from '../../../res/components/GlassMenu'
 import disableScroll from 'disable-scroll';
 
-
+import {useNavigate, useLocation} from 'react-router-dom'
 
 import facade from '../../mainClasses/DatabaseFacade'
 import globalStyles from '../../../src/global/Style'
@@ -24,19 +24,26 @@ import { ScrollView } from 'react-native-gesture-handler';
 let pagePointer = null
 
 export default function SectionsScreen({navigation, route}){
-    
-
-    
+    console.log("Navigation: First Navigation", navigation)
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [lastTopic, setLastTopic] = useState(0);
     const [topicDisplayName, setTopicDisplayName] = useState('ERROR');
     //mapPointer = facade.map
+
+  //Location of the entery
+    
+    const navigationObj = useNavigate()
+    const locationObj = useLocation()
 
     //Glass Animation Propreties
     const maxTranslation = -400
     const translation = useRef(
       new Animated.Value(0)
     ).current;
+    const maxIconsTranslation = -100
+    let iconsTranslation = useRef(
+      new Animated.Value(maxIconsTranslation)
+    ).current
 
 
     const windowWidth = Dimensions.get('window').width;
@@ -45,8 +52,15 @@ export default function SectionsScreen({navigation, route}){
     //Adding A Button for each map child
     let allButtonNames = facade.map.children
     const [mapObjectViews, setMapObjectViews] = useState(allButtonNames);
+    
 
     if(pagePointer ==  null) pagePointer = facade.map
+
+    let isFrontScreen = !Boolean(pagePointer.parent)
+    let listTop = -50
+    if(isFrontScreen){
+      listTop = 0
+    }
     
     //HandlePress navigates to the written topic based on the index
     const handlePress = (index) => {
@@ -60,9 +74,14 @@ export default function SectionsScreen({navigation, route}){
         //console.log(pagePointer.children[index], topicDisplayName)
         Animated.timing(translation, {
           toValue: maxTranslation,
-          duration: 350,
+          duration: 320,
           useNativeDriver: false
           //delay: 20,
+        }).start();
+        Animated.timing(iconsTranslation, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: false,
         }).start();        
         //navigation.navigate("TopicScreen", pagePointer.children[index].name);
         setIsModalVisible(true)
@@ -74,9 +93,11 @@ export default function SectionsScreen({navigation, route}){
       allButtonNames = pagePointer.children
       setMapObjectViews(allButtonNames)
     }
+    console.log("Navigation: ", navigation)
 
     //Function that triggers on native button press and navigates back
     const goBack = () => {
+      
       if(pagePointer ==  null) pagePointer = facade.map.getChild("TrainingBranches").getChild("Medics")
       if(pagePointer.parent == null) return
       pagePointer = pagePointer.parent
@@ -90,7 +111,7 @@ export default function SectionsScreen({navigation, route}){
         {right: maxTranslation,
         transform: [{translateX: translation}]}] }>
       
-        <GlassMenu  navigationFunction={navigateFunction} 
+          <GlassMenu navigationFunction={navigateFunction} 
                     facade = {facade} 
                     topic={lastTopic} 
                     topicDisplayName={topicDisplayName} 
@@ -100,11 +121,43 @@ export default function SectionsScreen({navigation, route}){
       </Animated.View>
     }
 
+    function getIcons(){
+        function navigateToTrivia(){
+          console.log("Navigating to Trivia")
+          navigation.navigate("TriviaScreen", {topicChosen: lastTopic})
+        }
+        function navigateToYoutube(){
+          console.log("Navigating to youtubeu")
+          navigation.navigate("VideosScreen", lastTopic)
+        }
+      
+        return <Animated.View style={[{position: 'absolute', zIndex: 150, width: '20%', height: '100%'}, 
+                  {left: 0 ,
+                  transform: [{translateX: iconsTranslation  }]}] }>
+                  <TouchableOpacity style={{width: '100%', height: '100%'}} onPress={dismissMenu}>
+                    <TouchableOpacity 
+                        style={[styleIcons.youtube, {left: 0, top: 10}]} 
+                        onPress={navigateToTrivia}>
+                            <Image style={{width: '100%', height: '100%', resizeMode: 'contain'}} source={require('../../../res/assets/glassMenu/TriviaIcon.png')} />
+                    </TouchableOpacity>
+
+                    {/*Youtube Button */}
+                    <TouchableOpacity 
+                        style={[styleIcons.youtube, {left: 0, top: 100}]} 
+                        onPress={navigateToYoutube}>
+                            <Image style={{width: '100%', height: '100%', resizeMode: 'contain'}} source={require('../../../res/assets/glassMenu/YoutubeIcon.png')} />
+                    </TouchableOpacity>
+                  </TouchableOpacity>
+          </Animated.View>
+          
+    }
+
     function setMenuInvisible(){
       setIsModalVisible(false)
     }
 
     function navigateFunction(screen, props){
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
         navigation.navigate(screen, props)
 
     }
@@ -119,15 +172,33 @@ export default function SectionsScreen({navigation, route}){
         delay: 70,
         useNativeDriver: false
       }).start(setMenuInvisible);
+
+      Animated.timing(iconsTranslation, {
+        toValue: maxIconsTranslation,
+        duration: 700,
+        delay: 100,
+        useNativeDriver: false
+
+      }
+      ).start()
       //disableScroll.off()  
     }
 
-    return(
-      <View style={{width: '100%', height: windowHeight}}>
+    function getFullGlassMenu(){
+      return(<View style={{width: '100%', height: '100%'}}>
+        {true? getIcons() : <View/>}
+
+        {true? getMenu() : <View/>}
         
+      </View>)
+
+
+    }
+    return(
+      <View style={{width: '100%', height: "100%"}}>
           <View style={[styles.container]} >
             {/*Top Banner requires goBack function*/}
-            <TopBanner style={[styles.topBanner, {position: 'absolute'}]} goBackFunction={()=>goBack}/>
+            <TopBanner style={[styles.topBanner, {position: 'absolute'}]} isSign={isFrontScreen} goBackFunction={()=>goBack}/>
             {pagePointer.parent == null? <View></View> : 
             <BackButton onPress={()=>goBack()}/>}
             {/*Back Button to go back to the other screen*/}
@@ -143,18 +214,21 @@ export default function SectionsScreen({navigation, route}){
             {pagePointer.displayName}</Text>}
 
             {/*View that contains all of the layers buttons*/}
-            <View style={styles.tasksWrapper}>
-              <FlatList style={styles.flatList} data={mapObjectViews}
+            <View style={[styles.tasksWrapper, {height: windowHeight / 1.5}]}>
+              <FlatList
+                    style={[styles.flatList, {top: listTop} ]} 
+                    data={mapObjectViews}
                     numColumns={1}
                     renderItem = {({item, index}) => <MapObjectView key={item.displayName} text={item.displayName} onPress={()=>handlePress(index)}/>}>
               </FlatList>
             </View>
+
             {/*<Image style={{width: '100%', height: '10%'}} id="output" source={require('../assets/ChooseBranch/BottomBannerRectengles.png')}/>*/}
-            <BottomBanner stickToBottom={!Boolean(pagePointer.parent)}/> 
+            <BottomBanner stickToBottom={true} /> {/*{isFrontScreen}/>*/}
             
           </View>
           
-          {isModalVisible? getMenu() : 
+          {isModalVisible? getFullGlassMenu() : 
           <View></View>}
         
         <link href="https://fonts.googleapis.com/css2?family=Alef&family=Heebo&family=Ms+Madi&family=Nabla&family=Noto+Sans+Buhid&family=Open+Sans&family=Oswald&display=swap" rel="stylesheet"/>
@@ -164,11 +238,22 @@ export default function SectionsScreen({navigation, route}){
     
 }
 
+const styleIcons = StyleSheet.create({
+
+  youtube: {
+      width: '90%',
+      aspectRatio: 1,
+      position: 'fixed',
+      zIndex: 7
+  },
+})
+
 
 const styles = StyleSheet.create({
   flatList:{
-    
-
+    height: '100%',
+    width: '100%',
+    paddingBottom: 100,
   },
   GlassMenuAnimatedView:{
     width: '100%',
@@ -196,13 +281,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF', 
-    height: parseInt(100 * WU),
+    height: "100%",
     width: '100%',
 
   },
   taskWrapper: {
-    paddingTop: 80,
     paddingHorizontal: 20,
+    position: 'relative',
+    top: "30%",
+    
+    width: '100%',
   },
   sectionTitle: {
       textAlignVertical: "center",

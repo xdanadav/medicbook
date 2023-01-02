@@ -2,14 +2,14 @@ import {Dimensions, Button, View, Text, Image, StyleSheet, TouchableOpacity} fro
 import {global} from '../../src/global/Style'
 //import { ScaleFromCenterAndroid } from 'react-navigation-stack/lib/typescript/src/vendor/TransitionConfigs/TransitionPresets';
 
-let maxStringLetters = 46;
+let maxStringLetters = 60;
 
 const windowWidth = Dimensions.get("window").width
 
 const MaterialButton = (props) => {
     return (
     <TouchableOpacity onPress={props.onPress} style={[styles.item, {width: props.width}]}>
-            <Image style = {[styles.Image, {width: props.width}]} source={require('../assets/glassMenu/materialButton.png')}/>
+            <Image style = {[styles.Image, {width: props.width}]} source={require('../assets/glassMenu/materialCrazyButton.png')}/>
             <Text style={styles.itemText}>{formatString(props.text)}</Text>
     </TouchableOpacity>
   )

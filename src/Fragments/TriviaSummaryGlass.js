@@ -64,20 +64,7 @@ const TriviaSummaryGlass = (props) => {
                 numColumns={6}
                 renderItem = {({question, index}) => <SummaryItem number={index + 1} correct={props.questions[index].wasCorrect} onPress={()=>{props.navigationFunc(index)}}/>}>
             </FlatList>
-
-            
-
-
-
-
-        </View>
-        
-            
-            
-
-
-        
-            
+        </View>        
     )
 }
 

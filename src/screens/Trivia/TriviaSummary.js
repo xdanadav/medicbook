@@ -29,6 +29,8 @@ export default function TriviaSummary({navigation}){
         return correctAnswers
 
     }
+
+    const [saturation, setSaturation] = useState(100)
     
     const transitionOpacity = useRef(
         new Animated.Value(1)
@@ -139,14 +141,16 @@ export default function TriviaSummary({navigation}){
 
     function watchMistakes(){
         setGlassVisible(true)
+        setSaturation(50)
         console.log("Clicked")
     }
     console.log(questions, questions.length, numberOfCorrectAnswers)
 
     return(
-        <View style={styles.container}>
-            <Animated.View style={[styles.backgroundGrid, {opacity: transitionOpacity, transform: [{translateX: backgroundOffset}]}]}>
-                <Image style={styles.fullSize} source={require('../../../res/assets/ Trivia/Group 58 (1).png')}/>
+        <View style={[styles.container]}>
+            
+            <Animated.View style={[styles.backgroundGrid, {filter: "saturate(" + saturation.toString() + "%)", opacity: transitionOpacity, transform: [{translateX: backgroundOffset}]}]}>
+                <Image style={styles.fullSize} source={require('../../../res/assets/ Trivia/RecapBackground.png')}/>
             </Animated.View>
             <Animated.View style={[styles.backgroundGrid, {right: "101%",opacity: transitionOpacity, transform: [{translateX: backgroundOffset}]}]}>
                 <Image style={styles.fullSize} source={require('../../../res/assets/ Trivia/Group 58 (1).png')}/>
@@ -159,7 +163,7 @@ export default function TriviaSummary({navigation}){
             {popUpVisible? <WrongButtonFragment text={popUpText} closeSelf={()=>{setPopUpVisible(false)}} visible={false}/>:
                 <View/>
             }
-            {glassVisible? <TriviaSummaryGlass questions={questions} navigationFunc={navigateToRecap} closeSelfFunc={()=>{setGlassVisible(false)}}/>: <View/>
+            {glassVisible? <TriviaSummaryGlass questions={questions} navigationFunc={navigateToRecap} closeSelfFunc={()=>{setGlassVisible(false); setSaturation(100)}}/>: <View/>
 
             }
             
