@@ -24,7 +24,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 let pagePointer = null
 
 export default function SectionsScreen({navigation, route}){
-    console.log("Navigation: First Navigation", navigation)
+  function NEWFUNCTION(){console.log("HelLO HElLo hellO")}  
+  
+  console.log("Navigation: First Navigation", navigation)
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [lastTopic, setLastTopic] = useState(0);
     const [topicDisplayName, setTopicDisplayName] = useState('ERROR');
@@ -120,6 +122,7 @@ export default function SectionsScreen({navigation, route}){
 
       </Animated.View>
     }
+    
 
     function getIconsComponent(){
         function navigateToTrivia(){
