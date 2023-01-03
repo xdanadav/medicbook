@@ -17,14 +17,11 @@ import { Easing } from 'react-native-reanimated';
 import { ScrollView } from 'react-native-gesture-handler';
 
 
-
-
-
-
 let pagePointer = null
 
 export default function SectionsScreen({navigation, route}){
   function NEWFUNCTION(){console.log("HelLO HElLo hellO")}  
+  function NEWFUNCTION2(){console.log("HelLO HElLo hellO")}  
   
   console.log("Navigation: First Navigation", navigation)
     const [isModalVisible, setIsModalVisible] = useState(false);
