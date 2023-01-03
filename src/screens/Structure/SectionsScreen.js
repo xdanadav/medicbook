@@ -28,7 +28,7 @@ export default function SectionsScreen({navigation, route}){
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [lastTopic, setLastTopic] = useState(0);
     const [topicDisplayName, setTopicDisplayName] = useState('ERROR');
-    //mapPointer = facade.map
+    
 
   //Location of the entery
     
@@ -96,8 +96,8 @@ export default function SectionsScreen({navigation, route}){
     console.log("Navigation: ", navigation)
 
     //Function that triggers on native button press and navigates back
+    
     const goBack = () => {
-      
       if(pagePointer ==  null) pagePointer = facade.map.getChild("TrainingBranches").getChild("Medics")
       if(pagePointer.parent == null) return
       pagePointer = pagePointer.parent
@@ -106,7 +106,7 @@ export default function SectionsScreen({navigation, route}){
       window.scrollTo(0,0)
     }
 
-    function getMenu(){
+    function getMenuComponent(){
       return <Animated.View style={[styles.GlassMenuAnimatedView, 
         {right: maxTranslation,
         transform: [{translateX: translation}]}] }>
@@ -121,7 +121,7 @@ export default function SectionsScreen({navigation, route}){
       </Animated.View>
     }
 
-    function getIcons(){
+    function getIconsComponent(){
         function navigateToTrivia(){
           console.log("Navigating to Trivia")
           navigation.navigate("TriviaScreen", {topicChosen: lastTopic})
@@ -131,24 +131,24 @@ export default function SectionsScreen({navigation, route}){
           navigation.navigate("VideosScreen", lastTopic)
         }
       
-        return <Animated.View style={[{position: 'absolute', zIndex: 150, width: '20%', height: '100%'}, 
+        return <Animated.View style={[styles.icons, 
                   {left: 0 ,
                   transform: [{translateX: iconsTranslation  }]}] }>
-                  <TouchableOpacity style={{width: '100%', height: '100%'}} onPress={dismissMenu}>
+                  <TouchableOpacity style={styles.fullScreen} onPress={dismissMenu}>
                     <TouchableOpacity 
                         style={[styleIcons.youtube, {left: 0, top: 10}]} 
                         onPress={navigateToTrivia}>
-                            <Image style={{width: '100%', height: '100%', resizeMode: 'contain'}} source={require('../../../res/assets/glassMenu/TriviaIcon.png')} />
+                            <Image style={[styles.fullScreen, {resizeMode: 'contain'}]} source={require('../../../res/assets/glassMenu/TriviaIcon.png')} />
                     </TouchableOpacity>
 
                     {/*Youtube Button */}
                     <TouchableOpacity 
                         style={[styleIcons.youtube, {left: 0, top: 100}]} 
                         onPress={navigateToYoutube}>
-                            <Image style={{width: '100%', height: '100%', resizeMode: 'contain'}} source={require('../../../res/assets/glassMenu/YoutubeIcon.png')} />
+                            <Image style={[styles.fullScreen, {resizeMode: 'contain'}]} source={require('../../../res/assets/glassMenu/YoutubeIcon.png')} />
                     </TouchableOpacity>
                   </TouchableOpacity>
-          </Animated.View>
+                </Animated.View>
           
     }
 
@@ -157,12 +157,8 @@ export default function SectionsScreen({navigation, route}){
     }
 
     function navigateFunction(screen, props){
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
         navigation.navigate(screen, props)
-
     }
-
-    
 
     function dismissMenu(){
       //function to animate the dissmising of the glassMenu
@@ -181,39 +177,29 @@ export default function SectionsScreen({navigation, route}){
 
       }
       ).start()
-      //disableScroll.off()  
     }
 
     function getFullGlassMenu(){
-      return(<View style={{width: '100%', height: '100%'}}>
-        {true? getIcons() : <View/>}
+      return(<View style={styles.fullScreen}>
 
-        {true? getMenu() : <View/>}
+        {true? getIconsComponent() : <View/>}
+        {true? getMenuComponent() : <View/>}
         
       </View>)
 
 
     }
     return(
-      <View style={{width: '100%', height: "100%"}}>
+      <View style={styles.fullScreen}>
           <View style={[styles.container]} >
-            {/*Top Banner requires goBack function*/}
+            {/*TOP BANNER*/}
             <TopBanner style={[styles.topBanner, {position: 'absolute'}]} isSign={isFrontScreen} goBackFunction={()=>goBack}/>
+            
+            {/*BACK BUTTON, Appears ONLY on topic screens*/}
             {pagePointer.parent == null? <View></View> : 
             <BackButton onPress={()=>goBack()}/>}
-            {/*Back Button to go back to the other screen*/}
             
-            {true? <Text></Text>
-            :
-            <Text style={[styles.sectionTitle, 
-            {position: 'static', 
-            left: 0, 
-            right: 0, 
-            marginLeft: 'auto',
-            marginRight: 'auto' }]}>
-            {pagePointer.displayName}</Text>}
-
-            {/*View that contains all of the layers buttons*/}
+            {/*BUTTONS LIST in the topic*/}
             <View style={[styles.tasksWrapper, {height: windowHeight / 1.5}]}>
               <FlatList
                     style={[styles.flatList, {top: listTop} ]} 
@@ -223,14 +209,16 @@ export default function SectionsScreen({navigation, route}){
               </FlatList>
             </View>
 
-            {/*<Image style={{width: '100%', height: '10%'}} id="output" source={require('../assets/ChooseBranch/BottomBannerRectengles.png')}/>*/}
-            <BottomBanner stickToBottom={true} /> {/*{isFrontScreen}/>*/}
+            {/*BOTTOM BANNER*/}
+            <BottomBanner stickToBottom={true} /> 
             
           </View>
           
+          {/*GLASS MENU - Appears only after clicking on a Topic */}
           {isModalVisible? getFullGlassMenu() : 
           <View></View>}
         
+        {/*Importing Fonts for the project */}
         <link href="https://fonts.googleapis.com/css2?family=Alef&family=Heebo&family=Ms+Madi&family=Nabla&family=Noto+Sans+Buhid&family=Open+Sans&family=Oswald&display=swap" rel="stylesheet"/>
     </View>
     
@@ -337,7 +325,19 @@ const styles = StyleSheet.create({
 },
 transparent: {
     backgroundColor: '#00000000'
-}
+},
+
+fullScreen: {
+  width: '100%',
+  height: '100%',
+},
+
+icons: {position: 'absolute',
+        zIndex: 150,
+        width: '20%',
+        height: '100%'},
+
+
 
 });
 

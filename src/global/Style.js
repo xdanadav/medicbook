@@ -2,11 +2,11 @@ import {Dimensions, StyleSheet} from 'react-native'
 
 
 
-let preferedFontItemSize = 25
+let preferedFontItemSize = 20
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 if(windowWidth > 500){
-    preferedFontItemSize = 60
+    preferedFontItemSize = 40
 }
 
 

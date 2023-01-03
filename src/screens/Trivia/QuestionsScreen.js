@@ -15,28 +15,11 @@ import facade from '../../mainClasses/DatabaseFacade'
 function doNothing(){
     console.log("doing Nothing")
 }
-/*[
-    new Question("שאלה 1", 0, ["1", "2", "3", "4", "5"]), new Question("שאלה 2", 0, ["1", "2", "3", "4", "5"]),
-    new Question("שאלה 3", 0, ["1", "2", "3", "4", "5"]), new Question("שאלה4", 0, ["1", "2", "3", "4", "5"]),
-    new Question("שאלה 5", 0, ["1", "2", "3", "4", "5"]), new Question("שאלה 6", 0, ["1", "2", "3", "4", "5"]),
-    new Question("שאלה 7", 0, ["1", "2", "3", "4", "5"]), new Question("שאלה 8", 0, ["1", "2", "3", "4", "5"]),
-    new Question("שאלה 9", 0, ["1", "2", "3", "4", "5"]), new Question("שאלה 10", 0, ["1", "2", "3", "4", "5"]),
-]*/
 
 export default function QuestionScreen({navigation}){
-    //console.log("Chosen Topic: ", navigation.state.params.topicChosen)
+    
     const [questions, setQuestions] = useState(facade.getTopicQuestions(navigation.state.params.topicChosen))
-    /*const [questions, setQuestions] = useState(([
-        new Question("איך קוראים לך?", 3, ["גילעד אהרוני", "יניב שוורץ", "לי שבת", "דורותי שווינצתי"]),
-        new Question("איך קוראים לך?", 3, ["גילעד אהרוני", "יניב שוורץ", "לי שבת", "דורותי שווינצתי"]),
-        new Question("איך קוראים לך?", 3, ["גילעד אהרוני המעצב הגרפי המלך של מדור איללל", "יניב שוורץ", "לי שבת", "דורותי שווינצתי"]),
-        new Question("איך קוראים לך?", 3, ["גילעד אהרוני", "יניב שוורץ", "לי שבת", "דורותי שווינצתי"]),
-        new Question("איך קוראים לך?", 3, ["גילעד אהרוני", "יניב שוורץ", "לי שבת", "דורותי שווינצתי"]),
-        new Question("איך קוראים לך?", 3, ["גילעד אהרוני", "יניב שוורץ", "לי שבת", "דורותי שווינצתי"]),
-        new Question("איך קוראים לך?", 3, ["גילעד אהרוני", "יניב שוורץ", "לי שבת", "דורותי שווינצתי"]),
-        new Question("איך קוראים לך?", 3, ["גילעד אהרוני", "יניב שוורץ", "לי שבת", "דורותי שווינצתי"]),
-
-    ]))*/
+    
 
     function goBack(){
         //navigation.navigate("TriviaSummary")
@@ -45,12 +28,6 @@ export default function QuestionScreen({navigation}){
     }
     
     function chooseAnswer(answerNum){
-        /*console.log(answerNum)
-        setQuestionNumber(questionNumber + 1)
-        setAnswers(questions[questionNumber].question)
-    
-        console.log("Questions: " ,questionNumber, questions[questionNumber].question, "Answers: ", answers)
-        */
        if(questionNumber + 1  < questions.length){
             questions[questionNumber].answer(answerNum)
             setQuestionText(questions[questionNumber + 1].question)

@@ -1,9 +1,8 @@
 import {Dimensions, Button, View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {global} from '../../../src/global/Style'
 
-const maxLetters = 40
-let preferedFontItemSize = global.preferedFontItemSize
-
+const maxLetters = 90
+let preferedFontItemSize = 20
 
 
 const TriviaAnswer = (props) => {
@@ -34,6 +33,7 @@ function getTextAndTextItemFontSize(text){
         text = text.slice(0,maxLetters + 11) + "..."
     }
     return {text, textItemFontSize}
+
 }
 
 
@@ -41,7 +41,6 @@ function getTextAndTextItemFontSize(text){
 const windowWidth = Dimensions.get('window').width;
 const WU = windowWidth / 100
 
-//var {vw, vh, vmin, vmax} = require('react-native-viewport-units');
 
 const styles = StyleSheet.create({
     container: {

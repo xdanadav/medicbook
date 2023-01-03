@@ -94,11 +94,12 @@ let screens = {
     VideosScreen: {
         screen: VideosScreen,
         navigationOptions: {
-            title: 'סרטונים',
+            headerShown: false,
         }
     },
     VideosLoadingScreen: {
         screen: VideosLoadingScreen,
+        
     },
     QuestionsScreen: {
         screen: QuestionsScreen,
