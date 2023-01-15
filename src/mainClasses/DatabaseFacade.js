@@ -204,14 +204,9 @@ class DatabaseFacade{
     onValue(startCountRef, (snapshot) => {
       let array = [];
       snapshot.forEach(function(_topic){
-        console.log("Topic: ", _topic.key)
         _topic.forEach(function(_child){
-          console.log("Child: ", _child.val())
-      
           let currentMaterial = new Material(_child.child("Name") , _child.child("url"))
-          
           array.push(currentMaterial);
-          console.log(_child.child("Name").val(), _child.child("url").val())
         })
       })
       this.materials = array

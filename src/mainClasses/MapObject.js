@@ -38,6 +38,7 @@ class MapObject{
                 return child;
             }
         }
+        return this
     }
 
     addChildren(children){

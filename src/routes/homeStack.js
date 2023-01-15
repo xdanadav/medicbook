@@ -17,6 +17,7 @@ import AddMaterialScreen from '../screens/Upload/AddMaterialScreen'
 import QuestionsScreen from '../screens/Trivia/QuestionsScreen'
 import TriviaSummary from '../screens/Trivia/TriviaSummary'
 import QuestionRecap from '../screens/Trivia/QuestionRecap'
+import TopicsScreen from '../screens/Structure/TopicsScreen'
 
 
 let screens = {
@@ -25,8 +26,16 @@ let screens = {
         
         navigationOptions: {
             headerShown: false,
+        },
+        
+    },
+    TopicsScreen: {
+        screen: TopicsScreen,
+        navigationOptions: {
+            headerShown: false,
         }
     },
+    
     TriviaScreen: {
         screen: TriviaScreen,
         navigationOptions: {

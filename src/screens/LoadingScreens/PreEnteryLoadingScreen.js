@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, createContext} from 'react';
 import {Animated, StyleSheet, View, Button, Text, Image } from 'react-native';
 import facade, {recreateDB} from '../../mainClasses/DatabaseFacade'
 import LottieView from 'lottie-react-native';
@@ -7,26 +7,15 @@ import history from '../../routes/history'
 
 import {useNavigate, useLocation, useParams} from "react-router-dom"
 
-
-
-class Person{
-    constructor(name){
-        this.name = name;
-        this.id = 100;
-        if(name == "Ronnie"){
-            this.id = 1;
-        }
-    }
-}
-
-
 //ReactDOM.render(<LoadingAnimation/>, document.getElementById("root")) 
-export default function PreEnteryLoadingScreen({navigation}){
+export default function PreEnteryLoadingScreen({navigation, route}){
     //Creating a loadinglistener that determines if we display the loading screen or not
     //setting a call back method at the facade, so when somthing changes it will trigger the loadinglistener to update
-    
-    
-    
+
+    let location = useLocation()
+    const routerNavigate = useNavigate()
+
+    console.log("Length of history Object: ", navigation.length)
     //Fireing requests to get the structure and material
     const translation = useRef(
         new Animated.Value(0)
@@ -37,8 +26,8 @@ export default function PreEnteryLoadingScreen({navigation}){
 
 
     const signMovingUpAmount = -240
+
     if(!facade.isMapSet()){
-        console.log("calling readStructure()")
       facade.readQuestions()
       facade.readStructure(navigateNextScreen)
       facade.readAllMaterials(navigateNextScreen)
@@ -47,10 +36,10 @@ export default function PreEnteryLoadingScreen({navigation}){
     }
     else{
         navigateNext()
-        console.log("Navigating next")
+
     }
-    let navigate = useNavigate()
-    console.log("Rerender")
+    
+
 
 
     let [infoCounter, setInfoCounter] = useState(0)
@@ -71,7 +60,62 @@ export default function PreEnteryLoadingScreen({navigation}){
     }
     function navigateNext(){
         //navigate("/SectionScreen", {replace: true})
-        navigation.navigate("SectionsScreen", {branch: branch, section: section, topic: topic})
+        let map = facade.map
+        setTimeout(() => {
+            if(branch){
+                let tempMap = map.getChild(branch)
+                if( tempMap === map){
+                    //Child Doesn't exist
+                    console.log("Branch: ", branch, "Doesn't exist")
+                    routerNavigate("/", {replace: true})
+                }
+                else{
+                    map = tempMap
+                    if(section){
+                        tempMap = map.getChild(section)
+                        if( tempMap === map){
+                            console.log(`section: ${section} doesnt exist`)
+                            routerNavigate("/" + branch, {replace: true})
+                        }
+                        else{
+                            map = tempMap
+                            if(topic){
+                                tempMap = map.getChild(topic)
+                                if( tempMap === map){
+                                    console.log("Topic Doesn't exist")
+                                    routerNavigate("/" + branch + "/" + section, {replace: true})
+                                }
+                                else{
+                                    navigation.navigate("TopicsScreen", {branch: branch, section: section, topic: topic})
+                                }
+                            }
+                            else{
+                                navigation.navigate("TopicsScreen", {branch: branch, section: section, topic: topic})
+                            }
+                        }
+                    }
+                    else{
+                        navigation.navigate("SectionsScreen", {branch: branch, section: section, topic: topic})
+                    }
+                    
+                
+                }
+            }
+            else{
+                navigation.navigate("SectionsScreen", {branch: branch, section: section, topic: topic})
+            }
+            
+            //navigation.navigate("SectionsScreen", {branch: branch, section: section, topic: topic}) 
+            
+          }, 10);
+
+          
+        
+
+        
+
+        
+       
     }
     
     return(

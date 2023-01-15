@@ -1,4 +1,4 @@
-import React, {document, WebView, useRef, useEffect, useState} from 'react';
+import React, {document, WebView, useRef, useEffect, useState, useContext, createContext} from 'react';
 import { Animated, Dimensions, FlatList, Text, StyleSheet, View, TouchableOpacity, Image,  BackHandler } from 'react-native';
 import map from '../../../src/global/map' 
 import TopBanner from '../../../res/components/TopBanner'
@@ -15,24 +15,47 @@ import BackButton from '../../../res/components/BackButton'
 import { string } from 'browserslist';
 import { Easing } from 'react-native-reanimated';
 import { ScrollView } from 'react-native-gesture-handler';
+import routerHistory, {NavigationOption} from '../../mainClasses/routerHistory'
 
 
 let pagePointer = null
 
 export default function SectionsScreen({navigation, route}){
-  function NEWFUNCTION(){console.log("HelLO HElLo hellO")}  
-  function NEWFUNCTION2(){console.log("HelLO HElLo hellO")}  
   
-  console.log("Navigation: First Navigation", navigation)
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [lastTopic, setLastTopic] = useState(0);
     const [topicDisplayName, setTopicDisplayName] = useState('ERROR');
+
+    const routerNavigate = useNavigate()
+
+    let branch = navigation.state.params.branch
+    let section = navigation.state.params.section
+    let topic = navigation.state.params.topic
+    
+    
+    useEffect(()=>{
+        pagePointer = facade.map
+        if(branch){
+          pagePointer = pagePointer.getChild(branch)
+          if(section){
+            pagePointer = pagePointer.getChild(section)
+            if( topic){
+              pagePointer = pagePointer.getChild(topic)
+            }
+          }
+        }
+        
+        setMapObjectViews(pagePointer.children)
+      
+    }, [branch, section, topic])
     
 
   //Location of the entery
     
     const navigationObj = useNavigate()
     const locationObj = useLocation()
+    
+
 
     //Glass Animation Propreties
     const maxTranslation = -400
@@ -47,13 +70,42 @@ export default function SectionsScreen({navigation, route}){
 
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
+
     
-    //Adding A Button for each map child
-    let allButtonNames = facade.map.children
-    const [mapObjectViews, setMapObjectViews] = useState(allButtonNames);
+    /*if(pagePointer ==  null) {
+      pagePointer = facade.map
+      if(branch){
+        pagePointer = pagePointer.getChild(branch)
+        if(section){
+          pagePointer = pagePointer.getChild(section)
+          if( topic){
+            pagePointer = pagePointer.getChild(topic)
+          }
+        }
+      }
+    }*/
+    if(pagePointer == null) {
+      pagePointer = facade.map
+      if(branch){
+        pagePointer = pagePointer.getChild(branch)
+        if(section){
+          pagePointer = pagePointer.getChild(section)
+          if( topic){
+            pagePointer = pagePointer.getChild(topic)
+          }
+        }
+      }
+    }
+   
+
+
     
 
-    if(pagePointer ==  null) pagePointer = facade.map
+    //Adding A Button for each map child
+    let allButtonNames = pagePointer.children
+    const [mapObjectViews, setMapObjectViews] = useState(allButtonNames);
+
+
 
     let isFrontScreen = !Boolean(pagePointer.parent)
     let listTop = -50
@@ -63,7 +115,10 @@ export default function SectionsScreen({navigation, route}){
     
     //HandlePress navigates to the written topic based on the index
     const handlePress = (index) => {
-      setLastTopic(pagePointer.children[index].name)
+      
+      routerHistory.push(`SectionScreen`, `/${branch}/${section}`, NavigationOption.Next)
+      routerNavigate(pagePointer.children[index].name, {state: {alreadyRendered: true}})
+      /*setLastTopic(pagePointer.children[index].name)
 
       if (pagePointer.children[index].children.length == 0) {
         console.log("no children")
@@ -90,19 +145,48 @@ export default function SectionsScreen({navigation, route}){
       }
       pagePointer = pagePointer.children[index]
       allButtonNames = pagePointer.children
-      setMapObjectViews(allButtonNames)
+      setMapObjectViews(allButtonNames)*/
     }
-    console.log("Navigation: ", navigation)
+    
 
     //Function that triggers on native button press and navigates back
     
     const goBack = () => {
-      if(pagePointer ==  null) pagePointer = facade.map.getChild("TrainingBranches").getChild("Medics")
+      /*if(pagePointer ==  null) pagePointer = facade.map.getChild("TrainingBranches").getChild("Medics")
       if(pagePointer.parent == null) return
       pagePointer = pagePointer.parent
       allButtonNames = pagePointer.children
-      setMapObjectViews(allButtonNames)
-      window.scrollTo(0,0)
+      setMapObjectViews(allButtonNames)*/
+      
+      //routerNavigate(-1)
+        if(!routerHistory.isEmpty()){routerNavigate(-1)}
+        else{
+            let path = constructPath(branch, section, topic)
+            let pathList = path.split("/")
+            let lastPath = "/"
+            if(pathList.length > 2)
+                lastPath = pathList.slice(0, pathList.length - 1).join("/")
+
+        
+                
+            routerHistory.remove('SectionScreen' ,path)
+            routerNavigate(lastPath, {replace: true})
+            window.scrollTo(0,0)
+
+      }
+    }
+
+    function constructPath(branch, section, topic){
+      if(branch){
+        if(section){
+          if(topic){
+            return "/" + branch + "/" + section + "/" + topic
+          }
+          return "/" + branch + "/" + section
+        }
+        return "/" + branch
+      }
+      return "/"
     }
 
     function getMenuComponent(){
@@ -158,6 +242,7 @@ export default function SectionsScreen({navigation, route}){
 
     function navigateFunction(screen, props){
         navigation.navigate(screen, props)
+        forceUpdate()
     }
 
     function dismissMenu(){

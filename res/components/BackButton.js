@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 0,
         top: 0,
-        zIndex: 1,
+        zIndex: 150,
     },
     backButton:{
         width: '100%',
@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
         resizeMode: "contain",
         alignSelf: "flex-end",
         position: 'static',
+
     },
 });
 
