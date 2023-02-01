@@ -18,7 +18,7 @@ import AddMaterialScreen from '../screens/Upload/AddMaterialScreen'
 import QuestionsScreen from '../screens/Trivia/QuestionsScreen'
 import TriviaSummary from '../screens/Trivia/TriviaSummary'
 import QuestionRecap from '../screens/Trivia/QuestionRecap'
-import {HashRouter as Router, Routes, Route} from 'react-router-dom'
+import {HashRouter, Routes, Route} from 'react-router-dom'
 import Navigator from './homeStack'
 import history from '../routes/history'
 
@@ -31,7 +31,7 @@ export default class MainRouter extends React.Component{
     render(){
         
         return(<>
-            <Router history={history}>
+            <HashRouter history={history}>
                 <Routes>
                     <Route path="/" element={<Navigator options={{ headerShown: false }}/>} />
                     <Route path="/:branch" element={<Navigator options={{ headerShown: false }}/>} />
@@ -40,7 +40,7 @@ export default class MainRouter extends React.Component{
                     <Route path="/:branch/:section/:topic/:action" element={<Navigator options={{ headerShown: false }}/>} />
                     
                 </Routes>
-             </Router>
+             </HashRouter>
         </>)
 
 
