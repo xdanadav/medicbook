@@ -4,6 +4,9 @@ import MaterialButton from './MaterialButton'
 import {global} from '../../src/global/Style'
 import { NavigationEvents } from 'react-navigation';
 import {Material} from '../../src/mainClasses/Material'
+import facade from '../../src/mainClasses/DatabaseFacade'
+import BackButton from '../../res/components/BackButton'
+import ScreenSize, {getCSS} from '../../src/mainClasses/ScreenSize'
 
 
 let icon_size = 80
@@ -12,7 +15,10 @@ const windowHeight = Dimensions.get('window').height;
 console.log(windowHeight)
 
 function getGlassMenu(props){
-    
+    let givenTopic = "Trauma"
+    if(props.topic){
+        givenTopic = props.topic
+    }
     let glassMenuWidth = windowWidth //88.6 is the width of the glass compared to the screen
     let flatListWidth = glassMenuWidth - 60
     let things = [];
@@ -20,7 +26,7 @@ function getGlassMenu(props){
 
     let materialList = useRef(null)
 
-    props.facade.materialsSnapshot.child(props.topic).forEach(function(_child){
+    props.facade.materialsSnapshot.child(givenTopic).forEach(function(_child){
         things.push(_child.child("Name").val())
         materialsList.push(new Material(_child.child("Name").val(), _child.child("url").val()))
         
@@ -31,7 +37,9 @@ function getGlassMenu(props){
     
     
     function handlePress(index){
-        props.navigationFunction("SingleMaterialScreen", {currentTopic: props.topic, currentMaterial: things[index], material: materialsList[index]})
+        //props.navigationFunction("SingleMaterialScreen", {currentTopic: props.topic, currentMaterial: things[index], material: materialsList[index]})
+        const [materialUrl, doesUrlAppearAgain, path] = props.facade.findMaterialUrl([props.branch, props.section, props.topic, things[index]])
+        props.navigationFunction("option?material=" + materialUrl)//+ things[index])
     }
 
     function handleScroll(event){
@@ -41,11 +49,11 @@ function getGlassMenu(props){
 
     //Navigation Functions
     function navigateToYoutube(){
-        props.navigationFunction("VideosScreen", props.topic)
+        props.navigationFunction("/VideosScreen") //, props.topic)
     }
 
     function navigateToTrivia(){
-        props.navigationFunction("TriviaScreen", {topicChosen: props.topic})
+        props.navigationFunction("/TriviaScreen") //, {topicChosen: props.topic})
     }
 
     const onScroll = () => { 
@@ -70,6 +78,44 @@ function getGlassMenu(props){
     
     const [iconsShown, setIconsShown] = useState(true)
 
+    var titleWidth = 350
+
+    
+    var currentScreenSize = getCSS()
+    if(currentScreenSize){
+        console.log("Current Screen Size: " , getCSS())
+    }
+
+    switch(currentScreenSize){
+        case ScreenSize.phone:
+            console.log("PhoneScreen Size")
+            titleWidth = 350
+            glassMenuWidth = 380
+            break;
+        case ScreenSize.tablet:
+            console.log("Tablet Size")
+            titleWidth = 500;
+            glassMenuWidth = 620
+            break;
+        case ScreenSize.laptop:
+            console.log("Laptop Size")
+            titleWidth = 650;
+            glassMenuWidth = 750
+            break;
+        case ScreenSize.computer:
+            console.log("Computer Size")
+            titleWidth = 750;
+            glassMenuWidth = 850
+            break;
+        default: 
+            console.log("EEEEEERRRRRROOORR")
+    }
+
+    console.log("TitleWijdth:" , titleWidth)
+    
+    
+    
+    
     function closeMenu(){
         setIconsShown(false)
         props.dismissFunction()
@@ -81,11 +127,11 @@ function getGlassMenu(props){
             <View scrollEnabled={false} style={{position: 'absolute', right: 0, height: screenSizeInPercentage, width: glassMenuWidth, zIndex: 100}} >
                 
                 {/* Title */}
-                <View style={[styles.titleContainer, {width: flatListWidth - 10}]}>
+                <View style={[styles.titleContainer, {width: 250}]}>
                     <Image style={[styles.topicTitleBackground]} source={require('../assets/glassMenu/glassTitle.png')} />
                     <Text style={[styles.topicTitleText, {fontSize : getFontSizeFromLength(props.topicDisplayName.length)}]}> {props.topicDisplayName}</Text>
                 </View>
-
+                <BackButton onPress={props.dismissFunction}/>
                 {/*Side close surface */}
                 <TouchableWithoutFeedback style={{zIndex: 100, width: '12.8%', height: '100%', position: 'absolute', right: 0}} onPress={closeMenu}>
                     <View style={{zIndex: 100, width: windowWidth - flatListWidth, height: '100%'}}></View>
@@ -109,9 +155,9 @@ function getGlassMenu(props){
                 {/* List of Buttons */}
                 <FlatList
                     data={topic} 
-                    style={{position:'absolute', top: 142,right: 0, zIndex: 4, width: flatListWidth, height: '75%'}}
+                    style={{ position:'absolute', top: 142,right: 0, zIndex: 4, width: titleWidth - 50, height: '75%'}}
                     numColumns={1}
-                    renderItem = {({item, index}) => <MaterialButton key={item + index.toString()} width={flatListWidth} text={item} onPress={()=>handlePress(index)}/>}>
+                    renderItem = {({item, index}) => <MaterialButton key={item + index.toString()} width={titleWidth - 50} text={item} onPress={()=>handlePress(index)}/>}>
                 </FlatList>
 
                 {/* true? <View></View>:
@@ -233,12 +279,12 @@ const styles = StyleSheet.create({
     },
     topicTitleBackground:{
         width: '100%',
-        height: '100%',
-        resizeMode: "contain",
+        height: '75%',
         zIndex:  9,
         opacity: 1,
         zIndex: 5,
         position: 'absolute',
+        resizeMode: 'stretch',
     },
     
     topicTitleText:{
@@ -251,7 +297,8 @@ const styles = StyleSheet.create({
         width: '90%',
         zIndex: 6,
         color: '#100031',
-        opacity: '80%',       
+        opacity: '80%',
+             
     },
     item: {
         backgroundColor: '#FFFFFF',

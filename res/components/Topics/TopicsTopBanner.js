@@ -12,7 +12,7 @@ export default function TopicsTopBanner(props) {
 
     var BannerTextFontStartingSize = 70
     var BannerTextFontSmallestSize = 50
-    console.log(props.sectionName.length, "length")
+    
     if(props.sectionName.length > 12){
         BannerTextFontStartingSize = 40
         BannerTextFontSmallestSize = 30
@@ -29,42 +29,61 @@ export default function TopicsTopBanner(props) {
     var BannerHeight = 100 + Math.max(0, 150 - props.scrollVal / 1.5)
     
     
+    
     var BannerTextFontSize = Math.max(BannerTextFontSmallestSize, BannerTextFontStartingSize - props.scrollVal / 10)
     var BannerBackgroundSizePercentage = `${Math.min(100, 70 + props.scrollVal / 10)}%`
+    
+    var TextSpacingRight = Math.min(70, props.scrollVal/1.5)
+
     //If shouldChangeAccordingToScrollVal is false it means we should have a specifiec expression to 
     //set this variables
     if(!props.shouldBannerChangeAccordingToScrollVal){
-        console.log("True")
+        
         color = "rgb(0, 0, 0)"
         BannerTextFontSize = 70
-        if(props.sectionName.length > 12){
-            BannerTextFontSize = 40
-            if(props.sectionName.length > 30){
-                console.log("Changing font size to 30")
-                BannerTextFontSize = 30
+        if(props.sectionName.length > 10){
+            BannerTextFontSize = 50
+            if(props.sectionName.length > 13){
+                BannerTextFontSize = 40
+                if(props.sectionName.length > 30){
+                    
+                    BannerTextFontSize = 30
+                }
             }
         }
 
         BannerHeight = 250
         BannerBackgroundSizePercentage = '70%'
+        var TextSpacingRight = 0
+        
 
     }
     
     
-    console.log(`${Math.floor(Math.min(-100 + (props.scrollVal/ windowWidth) * 100  , -1))}%`)
+    
     if(props.degrees) degrees = props.degrees
     const element = (
-        <View style={[styles.banner, {height: BannerHeight, zIndex: props.zIndex }]}>
+        <View style={[styles.banner, {height: BannerHeight, zIndex: props.zIndex,pointerEvents: 'none' }]}>
             <View style={{width: '100%', height: '100%', position: 'relative', top: 0}}>
-                <Image style={[styles.rectengles, { zIndex: 10, filter: `hue-rotate(${degrees}deg)`}]} id="output" source={require('../../assets/TopicsScreen/TopBanner.svg')}/>
+                {/*<Image style={[styles.rectengles, { zIndex: 10, filter: `hue-rotate(${degrees}deg)`}]} id="output" source={}/>*/}
+                <View style={[styles.banner]}>
+                    <View style={{width: '100%', height: '100%', overflow: 'hidden'}}>
+                        <Image style={styles.rectengles} id="output" source={require('../../assets/TopicsScreen/TopBanner.svg')} height={300}/>
+                            {props.isSign? 
+                            <Image style={styles.medicbookSign} source={imgSrc}/> :
+                            <View></View>
+                        }
+                    </View>
+                </View>
+                
                 <Text style={{
                     color: color,
                     fontSize: BannerTextFontSize,
                     fontFamily: 'Heebo', fontWeight: 'bold',
-                    
-                    left: '50%', marginLeft: -200,
+                   
+                    right: 10, marginRight: TextSpacingRight,
                     top: '50%', marginTop: -40,
-                    width: 400,
+                    width: 360,
                     height: 80,
                     alignSelf: 'center',
                     position: 'absolute',
@@ -118,16 +137,18 @@ const HU = windowHeight / 100
 
 const styles = StyleSheet.create({
     banner:{
-        width: '100%', //parseInt(100 * WU),
-        height: parseInt(40 * HU),
-        
+        width: "100%",
+        height: 300,
+        zIndex: 10,
     },
     rectengles:{
         width: '100%',
         height: '100%',
-        resizeMode: "cover",
+        //marginTop: -150,
+        //marginLeft: -60,
+        resizeMode: 'contain',
+        transform: [{scale: 2}, {translateX: 0}, {translateY: -20}],
         
-        backgroundPosition: "200px 140px",
     },
 
     medicbookSign:{

@@ -5,8 +5,16 @@ import { Dimensions } from 'react-native';
 const TopBanner = (props) =>{
     const element1 = (
 
-        <View style={[styles.banner, {pointerEvents: 'none', position: 'fixed', bottom: 0}]}>
-            <Image style={styles.rectengles} id="output" source={require('../assets/ChooseBranch/BottomBannerRectengles.png')}/>
+        <View style={[styles.banner, {pointerEvents: 'none', position: 'absolute', bottom: 0}]}>
+            <View style={[styles.backgroundView, {height: '60%', zIndex: 10}]}> </View>
+            <View style={[styles.backgroundView, {height: '56%', zIndex: 9}]}> </View>
+            <View style={[styles.backgroundView, {height: '52%', zIndex: 8}]}> </View>
+            <View style={[styles.backgroundView, {height: '48%', zIndex: 7}]}> </View>
+
+            <View style={{width: '100%', height: '100%', overflow: 'hidden', zIndex: 10}}>
+                <Image style={styles.rectengles} id="output" source={require('../assets/ChooseBranch/BottomBannerRectengles.png')}/>
+            </View>
+            
         </View> 
         
         
@@ -31,16 +39,30 @@ const HU = windowHeight / 100
 
 const styles = StyleSheet.create({
     banner:{
-        width: parseInt(100 * WU),
-        height: parseInt(33 * HU),
+        width: "100%",
+        height: 300,
+        
+        
         
     },
     rectengles:{
         width: '100%',
         height: '100%',
-        resizeMode: "cover",
+        resizeMode: "contain",
+        transform: [{scale: 2}, {translateY: 100}],
         filter: "hue-rotate(3deg)",
+        zIndex: 11,
+        
+        
     },
+    backgroundView: {
+        width: '100%',
+        position: 'absolute',
+        bottom: 0,
+        backgroundColor: 'white',
+        opacity: 0.36,
+        backdropFilter: 'blur(15px)', 
+    }
 })
 
 

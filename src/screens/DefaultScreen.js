@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
 import {Animated, StyleSheet, View, Button, Text } from 'react-native';
+import TopBanner from '../../res/components/TopBanner'
+import BottomBanner from '../../res/components/BottomBanner'
+import MapObjectView from '../../res/components/MapObjectView'
 
 export default function DefaultScreen({navigation}){
     let state = {
@@ -62,8 +65,9 @@ export default function DefaultScreen({navigation}){
     
     return(
         <View style={{width: '100%', height: '100%'}}>
-            <Animated.Image style={[{width: '100%', height: '100%', position: 'absolute'}, {opacity: state.opacity1}]} source={require('../../res/assets/ Trivia/Group 58 (1).png')}/>
-            <Animated.Image style={[{width: '100%', height: '100%', position: 'absolute'}, {opacity: state.opacity2}]} source={require('../../res/assets/ Trivia/background2.png')}/>
+            <TopBanner />
+            <MapObjectView text={"סייעות שינניות בהכשרת אימוני רפואה ופרמדיקים מוכשרים שזה חשוב מאוד כי יש להם ילדים"}/>
+            <BottomBanner />
         </View>
         
         

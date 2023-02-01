@@ -5,6 +5,8 @@ import TopBanner from '../../../res/components/TopBanner'
 import BottomBanner from '../../../res/components/BottomBanner'
 import MapObjectView from '../../../res/components/MapObjectView'
 import GlassMenu from '../../../res/components/GlassMenu'
+import Spotify from 'react-spotify-embed'
+
 import disableScroll from 'disable-scroll';
 
 import {useNavigate, useLocation} from 'react-router-dom'
@@ -48,6 +50,8 @@ export default function SectionsScreen({navigation, route}){
         setMapObjectViews(pagePointer.children)
       
     }, [branch, section, topic])
+
+    
     
 
   //Location of the entery
@@ -159,7 +163,7 @@ export default function SectionsScreen({navigation, route}){
       setMapObjectViews(allButtonNames)*/
       
       //routerNavigate(-1)
-        if(!routerHistory.isEmpty()){routerNavigate(-1)}
+        if(false){}//!routerHistory.isEmpty()){routerNavigate(-1)}
         else{
             let path = constructPath(branch, section, topic)
             let pathList = path.split("/")
@@ -170,6 +174,9 @@ export default function SectionsScreen({navigation, route}){
         
                 
             routerHistory.remove('SectionScreen' ,path)
+
+
+            console.log("Display Name: ", pagePointer.parent.displayName)
             routerNavigate(lastPath, {replace: true})
             window.scrollTo(0,0)
 
@@ -278,16 +285,16 @@ export default function SectionsScreen({navigation, route}){
       <View style={styles.fullScreen}>
           <View style={[styles.container]} >
             {/*TOP BANNER*/}
-            <TopBanner style={[styles.topBanner, {position: 'absolute'}]} isSign={isFrontScreen} goBackFunction={()=>goBack}/>
+            <TopBanner style={{zIndex: 8}} isSign={isFrontScreen} goBackFunction={()=>goBack}/>
             
             {/*BACK BUTTON, Appears ONLY on topic screens*/}
             {pagePointer.parent == null? <View></View> : 
             <BackButton onPress={()=>goBack()}/>}
             
             {/*BUTTONS LIST in the topic*/}
-            <View style={[styles.tasksWrapper, {height: windowHeight / 1.5}]}>
+            <View style={[styles.tasksWrapper, {height: windowHeight / 1.6}]}>
               <FlatList
-                    style={[styles.flatList, {top: listTop} ]} 
+                    style={[styles.flatList, {top: listTop, zIndex: 6} ]} 
                     data={mapObjectViews}
                     numColumns={1}
                     renderItem = {({item, index}) => <MapObjectView key={item.displayName} text={item.displayName} onPress={()=>handlePress(index)}/>}>
@@ -295,13 +302,17 @@ export default function SectionsScreen({navigation, route}){
             </View>
 
             {/*BOTTOM BANNER*/}
-            <BottomBanner stickToBottom={true} /> 
+            <BottomBanner style={{zIndex: 8}} stickToBottom={true} /> 
             
           </View>
           
           {/*GLASS MENU - Appears only after clicking on a Topic */}
           {isModalVisible? getFullGlassMenu() : 
           <View></View>}
+          
+          {branch == "Medicast"? <Spotify style={{position: 'absolute', top: 0, bottom: 0, marginTop: 'auto', marginBottom: 'auto', marginRight: 'auto', right: 0, left: 0, marginLeft: 'auto'}} 
+          link="https://open.spotify.com/episode/6U3LWmoEwYac7fshMEMZS6?si=5323e56f5414414b" /> : null}
+          
         
         {/*Importing Fonts for the project */}
         <link href="https://fonts.googleapis.com/css2?family=Alef&family=Heebo&family=Ms+Madi&family=Nabla&family=Noto+Sans+Buhid&family=Open+Sans&family=Oswald&display=swap" rel="stylesheet"/>
@@ -327,6 +338,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     paddingBottom: 100,
+    paddingTop: 20,
   },
   GlassMenuAnimatedView:{
     width: '100%',

@@ -229,6 +229,41 @@ class DatabaseFacade{
     });
 
   }
+
+  findMaterialUrl(materialDisplayPath){
+    /**
+     * Return the url of the wanted material and wheter or not the url appears in another material
+     *
+     * @param {List<String>} materialDisplayPath a list containing the materials url with a fileName in each index, and the last index containing the material's display name
+     * @return {(String, Bool, String)} (the Url, if it appears again, the path of the material in the JSON Tree)
+    */
+    
+    let materialName = materialDisplayPath.at(-1)
+    console.log("Material Name: ", materialName)
+    //currently we only need the topic but after database 
+    //reorganization we will need the all path
+    let topic = materialDisplayPath.at(-2)
+    let topicSnapshot = this.materialsSnapshot.child(topic)
+    //We want to make sure we are not deleting
+    //A file that is connected to another material
+    let isUrlAppearsInAnotherMaterial = false
+    let url = null
+    let materialPathName = ""
+    topicSnapshot.forEach(function(_id){
+      if(_id.child("Name").val() == materialName){
+        url = _id.child("url").val()
+        materialPathName = _id.key
+      }
+    })
+    //Searching for duplicate urls
+    topicSnapshot.forEach(function(_id){
+      if(_id.child("Name").val() != materialName && _id.child("url").val() == url){
+        isUrlAppearsInAnotherMaterial = true
+      }
+    })
+
+    return [url, isUrlAppearsInAnotherMaterial, materialPathName]
+}
   
 }
 

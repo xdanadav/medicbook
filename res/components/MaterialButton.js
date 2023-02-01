@@ -4,12 +4,12 @@ import {global} from '../../src/global/Style'
 
 let maxStringLetters = 60;
 
-const windowWidth = Dimensions.get("window").width
 
 const MaterialButton = (props) => {
+    console.log(props.width)
     return (
     <TouchableOpacity onPress={props.onPress} style={[styles.item, {width: props.width}]}>
-            <Image style = {[styles.Image, {width: props.width}]} source={require('../assets/glassMenu/materialCrazyButton.png')}/>
+            <Image style = {[styles.Image]} source={require('../assets/glassMenu/materialCrazyButton.png')}/>
             <Text style={styles.itemText}>{formatString(props.text)}</Text>
     </TouchableOpacity>
   )
@@ -24,19 +24,17 @@ function formatString(string){
 
 
 
-let itemHeight = 54
-if(windowWidth > 500)
-  itemHeight = 100
+
 
 
 const styles = StyleSheet.create({
   item: {
-    height: itemHeight,
+    aspectRatio: 7,
     justifyContent: "center",
     marginBottom: 10,
     textAlign: "right",
-    right: 0,
-    //backgroundColor: '#000'
+    right: "-5%",
+    
   },
   
   itemText: {  
@@ -44,19 +42,19 @@ const styles = StyleSheet.create({
     width: '70%',
     color: '#0C4F44',
     opacity: 1,
-    right: 20,
+    right: 40,
     fontSize: global.preferedFontItemSize * 0.5,
     fontWeight: 'bold',
     fontFamily: 'Heebo'
   },
 
   Image: {
-      height: itemHeight,
+      height: "100%",
+      width: "100%",
       //backgroundColor: 'red',
       resizeMode: "contain",
       opacity: 1,
       position: 'absolute',
-      right: '-10%',
       alignSelf: 'right',
   }  
 });

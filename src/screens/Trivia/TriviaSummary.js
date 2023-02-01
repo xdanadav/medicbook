@@ -10,6 +10,7 @@ import BackButton from '../../../res/components/BackButton';
 import WrongButtonFragment from '../../Fragments/WrongButtonFragment'
 
 import TriviaSummaryGlass from '../../../src/Fragments/TriviaSummaryGlass'
+import {useNavigate, useParams} from 'react-router-dom'
 
 
 
@@ -18,6 +19,9 @@ export default function TriviaSummary({navigation}){
     const [questions, setQuestions] = useState(navigation.state.params.questions)
     const [numberOfCorrectAnswers, setNumberOfCorrectAnswers] = useState(checkNumberOfCorrectAnswers())  
     
+    let routerNavigate = useNavigate()
+    let {branch, section, topic} = useParams()
+
     function checkNumberOfCorrectAnswers(){
         let correctAnswers = 0
         for(let i = 0; i < questions.length; i++)
@@ -45,7 +49,8 @@ export default function TriviaSummary({navigation}){
     })
 
     function goBack(){
-        navigation.pop(3)
+        //navigation.pop(3)
+        routerNavigate("/" + branch + "/" + section + "/" + topic, {replace: true})
     }
 
     // First set up animation 

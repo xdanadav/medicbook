@@ -3,6 +3,7 @@ import {Linking, StyleSheet, View, Button, Text, Image, TouchableOpacity, FlatLi
 import VideoThumbnail from '../../../res/components/VideoThumbnail'
 import facade from '../../mainClasses/DatabaseFacade';
 import BackButton from '../../../res/components/BackButton';
+import {useNavigate, useParams} from 'react-router-dom'
 
 export default function VideoScreen({navigation}){
     let videoIds = []
@@ -11,20 +12,22 @@ export default function VideoScreen({navigation}){
     const loadInBrowser = (videoId) => {
         Linking.openURL("https://www.youtube.com/watch?v=" + videoId).catch(err => console.error("Couldn't load page", err));
     };
+
     function handlePress(index){
         loadInBrowser(videoIds[index])
         //navigation.navigate("YoutubePlayerScreen")
     }
 
     let i = 0
-        
-    
+    let routerNavigate = useNavigate()
+    let {branch, section, topic} = useParams()   
+    console.log("BRANCH: ", branch, section, topic)
 
 
     setVideoList()
     function setVideoList(){
-        console.log(navigation.state.params)
-        let holder = facade.videosSnapShot.child(navigation.state.params + "/")
+        
+        let holder = facade.videosSnapShot.child(topic + "/")
         holder.forEach(function(_video){
             let id = _video.child("url/").val()
             let thumbnail = _video.child("Name/").val()
@@ -42,7 +45,7 @@ export default function VideoScreen({navigation}){
 
     return(
         <View style={styles.container}>
-            <BackButton />
+            <BackButton onPress={() => {routerNavigate("/" + branch + "/" + section + "/" + topic), {replace: true}}}/>
             {videos.length == 0? <Text style={styles.noVideos}>אין סרטונים בנושא זה</Text> :
                 <FlatList style={styles.videoList} data={videos}
                     numColumns={2}

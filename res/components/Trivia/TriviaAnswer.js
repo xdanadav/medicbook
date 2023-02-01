@@ -1,8 +1,8 @@
 import {Dimensions, Button, View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {global} from '../../../src/global/Style'
 
-const maxLetters = 90
-let preferedFontItemSize = 20
+const maxLetters = 120
+let preferedFontItemSize = 16
 
 
 const TriviaAnswer = (props) => {

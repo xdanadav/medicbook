@@ -1,39 +1,73 @@
 import {View, Image, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import { requireNativeViewManager } from 'expo-modules-core';
 import { Dimensions } from 'react-native';
+import ScreenSize, {getCSS} from '../../src/mainClasses/ScreenSize'
+
+
+
 
 const TopBanner = (props) =>{
+
+    let imgSources = [require('../assets/ChooseBranch/TopBannerRectengles.png'), require('../assets/ChooseBranch/TopBannerRectengles.png')]
+    let imgSrc = null
+    let currentScreenSize = getCSS()
+    let bannerMarginTop = -150
+    switch(currentScreenSize){
+        case ScreenSize.phone:
+            imgSrc = imgSources[0]
+            bannerMarginTop = -100
+            break;
+        case ScreenSize.tablet:
+            imgSrc = imgSources[1]
+            bannerMarginTop = -150
+            break;
+        default:
+            imgSrc = imgSources[0]
+            bannerMarginTop = -100
+            break;
+    }
+        
     const element = (
-        <View style={styles.banner}>
-            <Image style={styles.rectengles} id="output" source={require('../assets/ChooseBranch/TopBannerRectengles.png')}/>
-            {props.isSign? 
-            <Image style={styles.medicbookSign} source={require('../assets/ChooseBranch/MedicBook.png')}/> :
-            <View></View>
-        }
+        <View style={[styles.banner]}>
+            <View style={{width: '100%', height: '100%', overflow: 'hidden'}}>
+                <Image style={styles.rectengles} id="output" source={imgSrc} height={300}/>
+                    {props.isSign? 
+                    <Image style={styles.medicbookSign} source={require('../assets/ChooseBranch/MedicBookSign.png')}/> :
+                    <View></View>
+                }
+            </View>
+            
             {/**/}
         </View>
     )
     return element
 }
 
+//Style Constants
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-//WU - Width Unit
+
 const WU = windowWidth / 100
 const HU = windowHeight / 100
 
 
 const styles = StyleSheet.create({
     banner:{
-        width: parseInt(100 * WU),
-        height: parseInt(33 * HU),
+        width: "100%",
+        height: 300,
+
+       
+        
         
     },
     rectengles:{
         width: '100%',
         height: '100%',
-        resizeMode: "cover",
-        filter: "hue-rotate(3deg)",
+        //marginTop: -150,
+        //marginLeft: -60,
+        resizeMode: 'contain',
+        transform: [{scale: 2}, {translateX: 0}, {translateY: -80}],
+        
     },
 
     medicbookSign:{

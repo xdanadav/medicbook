@@ -21,6 +21,7 @@ import TopicsScreen from '../screens/Structure/TopicsScreen'
 
 
 let screens = {
+   
     PreEnteryLoadingScreen : {
         screen: PreEnteryLoadingScreen,
         
@@ -28,6 +29,9 @@ let screens = {
             headerShown: false,
         },
         
+    }, 
+    DefaultScreen: {
+        screen: DefaultScreen
     },
     TopicsScreen: {
         screen: TopicsScreen,
@@ -64,9 +68,7 @@ let screens = {
         }
     },
     
-    DefaultScreen: {
-        screen: DefaultScreen
-    },
+    
     
     AddMaterialScreen:{
         screen: AddMaterialScreen

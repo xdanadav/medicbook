@@ -16,19 +16,25 @@ const WH = windowHeight / 100;
 
 const styles = StyleSheet.create({
     backButtonContainer:{
-        width: parseInt(20 * WU),
-        height: parseInt(20 * WH),
+        width: 80,
+        height: 50,
         position: 'absolute',
         right: 0,
         top: 0,
-        zIndex: 150,
+        zIndex: 250,
+        marginTop: 0,
+     
+        
     },
     backButton:{
         width: '100%',
         height: '100%',
         resizeMode: "contain",
         alignSelf: "flex-end",
-        position: 'static',
+        position: 'absolute',
+        marginRight: 0,
+        
+
 
     },
 });

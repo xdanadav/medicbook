@@ -8,6 +8,7 @@ import { Easing } from 'react-native-reanimated';
 import BackButton from '../../../res/components/BackButton';
 import WrongButtonFragment from '../../Fragments/WrongButtonFragment'
 import facade from '../../mainClasses/DatabaseFacade'
+import {useNavigate, useParams} from 'react-router-dom'
 
 
 
@@ -19,6 +20,9 @@ function doNothing(){
 export default function TriviaScreen({navigation}){
     const [firstRun, setFirstRun] = useState(true)
     const [isQuestionsInTopic, setIsQuestionsInTopic] = useState(facade.isQuestionsInTopic(navigation.state.params))
+
+    let {branch, section, topic} = useParams()
+    let routerNavigate = useNavigate()
 
     console.log(navigation.state.params)
     if(firstRun){
@@ -39,8 +43,10 @@ export default function TriviaScreen({navigation}){
     }
 
     function goBack(){
-        navigation.goBack()
+        //navigation.goBack()
+        routerNavigate("/" + branch + "/" + section + "/" + topic, {replace: true})
     }
+
 
     
     const transitionOpacity = useRef(
