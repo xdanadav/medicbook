@@ -1,8 +1,3 @@
-#
-#substitutions:
-#    _IMAGE_NAME: medicbook-dev
-#    _GIT_REPO: https://github.com/xdanadav/medicbook.git
-    
 steps:
 # Build the container image
 - name: 'gcr.io/cloud-builders/docker'
@@ -14,7 +9,6 @@ steps:
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args:
-    - 'beta'
     - 'run'
     - 'deploy'
     - 'medibook-dev'
@@ -29,6 +23,5 @@ steps:
     - '--max-instances'
     - '1'
     - '--allow-unauthenticated'
-
 images:
 - 'europe-west3-docker.pkg.dev/$PROJECT_ID/medibook-dev-repo/medibook-dev'
