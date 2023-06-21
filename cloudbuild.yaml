@@ -6,22 +6,8 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'europe-west3-docker.pkg.dev/$PROJECT_ID/medibook-dev-repo/medibook-dev:$COMMIT_SHA']
 # Deploy container image to Cloud Run
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: gcloud
-  args:
-    - 'run'
-    - 'deploy'
-    - 'medibook-dev'
-    - '--image'
-    - 'europe-west3-docker.pkg.dev/$PROJECT_ID/medicbook-dev-repo/medicbook-dev:$COMMIT_SHA'
-    - '--region'
-    - 'eu-west3'
-    - '--platform'
-    - 'managed'
-    - '--min-instances'
-    - '0'
-    - '--max-instances'
-    - '1'
-    - '--allow-unauthenticated'
+- name: "gcr.io/cloud-builders/gcloud"
+  args: ['beta', 'run', 'deploy', 'medibook-dev', '--image', 'europe-west3-docker.pkg.dev/$PROJECT_ID/medicbook-dev-repo/medicbook-dev:$COMMIT_SHA', '--region', 'eu-west3', '--allow-unauthenticated', '--platform', 'managed']
+
 images:
 - 'europe-west3-docker.pkg.dev/$PROJECT_ID/medibook-dev-repo/medibook-dev'
