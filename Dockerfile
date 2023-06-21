@@ -1,3 +1,4 @@
+#
 FROM node:14-alpine AS development
 
 # Add a work directory
