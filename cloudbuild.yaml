@@ -7,6 +7,8 @@ steps:
 # Build the container image
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'eu-west3-docker.pkg.dev/$PROJECT_ID/medibook-dev-repo/medicbook-dev:$COMMIT_SHA', '.']
+  images:
+  - 'eu-west3-docker.pkg.dev/$PROJECT_ID/medibook-dev-repo/medicbook-dev'
 # Push the container image to Artifact Registry
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'eu-west3-docker.pkg.dev/$PROJECT_ID/medicbook-dev-repo/medicbook-dev:$COMMIT_SHA']
@@ -29,5 +31,3 @@ steps:
 #    - '--max-instances'
 #    - '1'
 #    - '--allow-unauthenticated'
-images:
-- 'eu-west3-docker.pkg.dev/$PROJECT_ID/medibook-dev-repo/medicbook-dev'
