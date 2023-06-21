@@ -5,7 +5,7 @@ steps:
 # Push the container image to Artifact Registry
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'europe-west3-docker.pkg.dev/$PROJECT_ID/medibook-dev-repo/medibook-dev:$COMMIT_SHA']
- Deploy container image to Cloud Run
+# Deploy container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args:
