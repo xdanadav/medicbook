@@ -19,6 +19,6 @@ steps:
     - '--allow-unauthenticated'
     - '--platform'
     - 'managed'
-
+#
 images:
 - 'europe-west3-docker.pkg.dev/$PROJECT_ID/medibook-dev-repo/medibook-dev'
